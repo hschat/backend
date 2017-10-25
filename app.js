@@ -1,7 +1,7 @@
 const WebSocketServer = require('websocket').server;
 const http = require('http');
 
-const port = process.env['APP_PORT'] || 5000;
+const port = process.env['PORT']|| process.env['APP_PORT'] || 5000;
 
 const server = http.createServer(function(request, response) {
   console.log((new Date()) + ' Received request for ' + request.url);
