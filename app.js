@@ -24,6 +24,7 @@ wsServer = new WebSocketServer({
 });
 
 function originIsAllowed(origin) {
+  // @ToDo: Need to check them in future
   return true;
 }
 
