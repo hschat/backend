@@ -1,0 +1,16 @@
+{
+  "name": "chat-backend",
+  "version": "0.1.0",
+  "description": "Websockt based chat backend for HSC",
+  "main": "app.js",
+  "repository": "git@gitlab.com:CSPr/WS1718/HSChat/backend.git",
+  "author": "David Schwarzmann <dev@dschwarz.codes>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "websocket": "^1.0.25"
+  },
+  "scripts": {
+    "start": "node app.js"
+  }
+}
