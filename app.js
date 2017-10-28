@@ -28,11 +28,18 @@ function originIsAllowed(origin) {
   return true;
 }
 
+const clients = [];
+
 
 function handleJoin(msg, cb) {
   if(!msg.hasOwnProperty('nickname') && !msg.hasOwnProperty('sent')) {
     msg.connection.sendUTF(JSON.stringify({status: 400, message: 'Missing argument'}));
   } else {
+    clients.push({
+      con: msg.connection,
+      nickname: msg.nickname
+    });
+
     msg.connection.sendUTF(JSON.stringify({
       type: msg.type,
       success: true,
@@ -46,12 +53,14 @@ function handleCM(msg, cb) {
   if(!msg.hasOwnProperty('text')) {
     msg.connection.sendUTF(JSON.stringify({status: 400, message: 'Missing argument'}));
   } else {
-    msg.connection.sendUTF(JSON.stringify({
-      type: msg.type,
-      message: msg.text,
-      nickname: msg.nickname,
-      sent: msg.sent})
-    );
+    for(i in clients) {
+      clients[i].con.sendUTF(JSON.stringify({
+        type: msg.type,
+        message: msg.text,
+        nickname: msg.nickname,
+        sent: msg.sent})
+      )
+    }
   }
 }
 
@@ -67,10 +76,8 @@ wsServer.on('request', function (request) {
   console.log((new Date()) + ' Connection accepted.');
 
   connection.on('message', function (message) {
-
     if (message.type === 'utf8') {
       console.log('Received Message: ' + message.utf8Data);
-
       let data = JSON.parse(message.utf8Data);
 
       // Check if message type is available
@@ -96,5 +103,10 @@ wsServer.on('request', function (request) {
 
   connection.on('close', function (reasonCode, description) {
     console.log((new Date()) + ' | Peer ' + connection.remoteAddress + ' disconnected with code ' + reasonCode + ' - ' + description);
+    for (i in clients) {
+      if (clients[i]._con === connection) {
+        clients.splice(i, 1);
+      }
+    }
   });
 });
