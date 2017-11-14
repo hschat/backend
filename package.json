@@ -1,16 +1,57 @@
 {
-  "name": "chat-backend",
-  "version": "0.1.0",
-  "description": "Websockt based chat backend for HSC",
-  "main": "app.js",
-  "repository": "git@gitlab.com:CSPr/WS1718/HSChat/backend.git",
-  "author": "David Schwarzmann <dev@dschwarz.codes>",
-  "license": "MIT",
-  "private": true,
-  "dependencies": {
-    "websocket": "^1.0.25"
+  "name": "backend",
+  "description": "",
+  "version": "0.0.0",
+  "homepage": "",
+  "main": "src",
+  "keywords": [
+    "feathers"
+  ],
+  "author": {
+    "name": "David Schwarzmann",
+    "email": "dev@dschwarz.codes"
+  },
+  "contributors": [],
+  "bugs": {},
+  "directories": {
+    "lib": "src",
+    "test": "test/"
+  },
+  "engines": {
+    "node": ">= 6.0.0",
+    "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "test": "npm run eslint && npm run mocha",
+    "eslint": "eslint src/. test/. --config .eslintrc.json",
+    "start": "node src/",
+    "mocha": "mocha test/ --recursive --exit"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "compression": "^1.7.1",
+    "cors": "^2.8.4",
+    "feathers": "^2.2.3",
+    "feathers-authentication": "^1.3.1",
+    "feathers-authentication-hooks": "^0.1.5",
+    "feathers-authentication-jwt": "^0.3.2",
+    "feathers-authentication-local": "^0.4.4",
+    "feathers-configuration": "^0.4.2",
+    "feathers-errors": "^2.9.2",
+    "feathers-hooks": "^2.1.2",
+    "feathers-hooks-common": "^3.10.0",
+    "feathers-rest": "^1.8.1",
+    "feathers-rethinkdb": "^0.4.3",
+    "feathers-socketio": "^2.0.1",
+    "helmet": "^3.9.0",
+    "rethinkdbdash": "^2.3.31",
+    "serve-favicon": "^2.4.5",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.11.0",
+    "mocha": "^4.0.1",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
   }
 }

@@ -1,0 +1,42 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "authentication": {
+    "secret": "1fc7e64424b8974ea2b47148ef4ea6f9667eed1f01544782e7729a85844641f6d8a5becc8c1c0e9d8169ead239f9b13136464c77172080b8329cb4669a14d1314f10293abe650d27fa39060cc2314b6dc5c95a50d10db014e55db5bb424065327d25a360b290538d3312689f14e0cb944ad2e12104e0e38aa4628a6d93e0c5c413d2ebb29468abcff1042aa35f7f32f10b363a0f8ed304d0fe5be1a8867cde134e1833a561099840828ef23d6678491341606d3f14245a329c64d781faf31c435cb3e38ded03525f405b5186555d3a3838910b3b474570b553c6d0f321f691148dba310cde347dc7f9d75f8121fd15ce94daa62f43e96691628f362c6bc5cf41",
+    "strategies": [
+      "jwt",
+      "local"
+    ],
+    "path": "/authentication",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://hsc-app.harpoon.digital",
+      "subject": "anonymous",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "entity": "user",
+      "usernameField": "email",
+      "passwordField": "password"
+    }
+  },
+  "rethinkdb": {
+    "db": "hs_chat",
+    "servers": [
+      {
+        "host": "localhost",
+        "port": "28015"
+      }
+    ]
+  }
+}
