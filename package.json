@@ -40,6 +40,7 @@
     "feathers-errors": "^2.9.2",
     "feathers-hooks": "^2.1.2",
     "feathers-hooks-common": "^3.10.0",
+    "feathers-mailer": "^2.0.0",
     "feathers-rest": "^1.8.1",
     "feathers-rethinkdb": "^0.4.3",
     "feathers-socketio": "^2.0.1",
