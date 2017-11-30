@@ -1,4 +1,14 @@
 {
   "host": "hsc-backend.harpoon.digital",
-  "port": "PORT"
+  "port": "PORT",
+  "rethinkdb": {
+    "db": "DATABASE_NAME",
+    "servers": [
+      {
+        "host": "DATABASE_HOST",
+        "user": "DATABASE_USER",
+        "password": "DATABASE_PASSWORD"
+      }
+    ]
+  }
 }
