@@ -1,5 +1,5 @@
 {
-  "host": "hsc-backend.harpoon.digital",
+  "host": "hsc-backend.herokuapp.com",
   "port": "PORT",
   "rethinkdb": {
     "db": "DATABASE_NAME",
