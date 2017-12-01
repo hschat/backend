@@ -1,6 +1,6 @@
-// Initializes the `messages` service on path `/messages`
+// Initializes the `chats` service on path `/chats`
 const createService = require('feathers-rethinkdb');
-const hooks = require('./messages.hooks');
+const hooks = require('./chats.hooks');
 
 module.exports = function () {
   const app = this;
@@ -8,16 +8,16 @@ module.exports = function () {
   const paginate = app.get('paginate');
 
   const options = {
-    name: 'messages',
+    name: 'chats',
     Model,
     paginate
   };
 
   // Initialize our service with any options it requires
-  app.use('/messages', createService(options));
+  app.use('/chats', createService(options));
 
   // Get our initialized service so that we can register hooks and filters
-  const service = app.service('messages');
+  const service = app.service('chats');
 
   service.hooks(hooks);
 };
