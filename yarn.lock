@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@feathers-plus/batch-loader@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@feathers-plus/batch-loader/-/batch-loader-0.3.0.tgz#9e97d174fcf3d4aff8b4db1655757aabdf50b9ec"
+
 "@feathersjs/authentication-jwt@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@feathersjs/authentication-jwt/-/authentication-jwt-1.0.1.tgz#4ec8815e8d27faa745575850eeebeb5b873c3276"
@@ -371,6 +375,10 @@ cli-cursor@^2.1.0:
 cli-width@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/cli-width/-/cli-width-2.2.0.tgz#ff19ede8a9a5e579324147b0c11f0fbcbabed639"
+
+clone@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.1.tgz#d217d1e961118e3ac9a4b8bba3285553bf647cdb"
 
 co@^4.6.0:
   version "4.6.0"
@@ -811,32 +819,23 @@ feathers-authentication-hooks@^0.1.5:
     lodash.isplainobject "^4.0.6"
     lodash.set "^4.3.2"
 
-feathers-commons@^0.8.6:
-  version "0.8.7"
-  resolved "https://registry.yarnpkg.com/feathers-commons/-/feathers-commons-0.8.7.tgz#11c6f25b537745a983e8d61552d7db8932d53782"
-
-feathers-errors@^2.4.0, feathers-errors@^2.5.0:
+feathers-errors@^2.5.0:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/feathers-errors/-/feathers-errors-2.9.2.tgz#96ca0e5fe50cc56f0eccc90ce3fa5e1f8840828d"
   dependencies:
     debug "^3.0.0"
 
-feathers-hooks-common@^3.10.0:
+"feathers-hooks-common@git://github.com/feathers-plus/feathers-hooks-common.git#master":
   version "3.10.0"
-  resolved "https://registry.yarnpkg.com/feathers-hooks-common/-/feathers-hooks-common-3.10.0.tgz#2ae7dc54091ffa4609df8479c0bfa29dcd31d1a7"
+  resolved "git://github.com/feathers-plus/feathers-hooks-common.git#9e00226d2bb2b614f4c342a64f6cd3b705dd2a95"
   dependencies:
+    "@feathers-plus/batch-loader" "0.3.0"
+    "@feathersjs/commons" "^1.2.0"
+    "@feathersjs/errors" "^3.0.0"
     ajv "^5.2.0"
     debug "^3.0.0"
-    feathers-errors "^2.4.0"
-    feathers-hooks "^2.0.1"
+    process "0.11.10"
     traverse "^0.6.6"
-
-feathers-hooks@^2.0.1:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/feathers-hooks/-/feathers-hooks-2.1.2.tgz#f97af10f38621df816d754766c5c2e180b7df951"
-  dependencies:
-    feathers-commons "^0.8.6"
-    uberproto "^1.2.0"
 
 feathers-mailer@^2.0.0:
   version "2.0.0"
@@ -1589,6 +1588,10 @@ prelude-ls@~1.1.2:
 process-nextick-args@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-1.0.7.tgz#150e20b756590ad3f91093f25a4f2ad8bff30ba3"
+
+process@0.11.10:
+  version "0.11.10"
+  resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
 
 progress@^2.0.0:
   version "2.0.0"
