@@ -59,12 +59,13 @@ async function check_for_double(context) {
       }
       // Chats were found
     }).then(async (result) => {
-      console.log('DB Query Result: ', result);
-      for (let i in result.data) {
-        if (result.data[i].recievers[0].id === recievers[0]) {
+      let chats = result.data;
+      console.log('DB Query Result: ', chats);
+      for (let i in chats) {
+        if (chats[i].recievers[0] === recievers[0]) {
           console.error('Duplicate chat found');
-          result.data[i].recievers = await replaceUsers(context, result.data[i].recievers);
-          context.result = result.data[i];
+          chats[i].recievers = await replaceUsers(context, chats[i].recievers);
+          context.result = chats[i];
           return context;
         }
       }
@@ -95,7 +96,6 @@ async function format_chats(context) {
    * }
    */
 
-  console.log('Format after ', context.method, context.result);
   if (context.result.hasOwnProperty('data')) {
     context.result = context.result.data;
   }
@@ -117,6 +117,8 @@ async function format_chats(context) {
       context.result.recievers = await replaceUsers(context, context.result.recievers);
     }
   }
+
+  console.log('Format after ', context.method, context.result);
   return context;
 }
 

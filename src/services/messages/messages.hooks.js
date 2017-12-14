@@ -1,7 +1,38 @@
 const {authenticate} = require('@feathersjs/authentication').hooks;
 const {disallow, fastJoin} = require('feathers-hooks-common');
-var clone = require('clone');
 
+/**
+ * Helper function for replacing a given user id with its database object
+ * @param context The context of the request
+ * @param id The uuid of the user
+ * @returns {Promise<*>} Returns a promise of the function progress
+ */
+async function replaceUser(context, id) {
+  let user = await context.app.service('users').get(id);
+  if (user.hasOwnProperty('password')) user.password = undefined;
+  return user;
+}
+
+/**
+ *
+ * @param context
+ * @returns {Promise<*>}
+ */
+async function resolve_users(context) {
+  if(context.result.hasOwnProperty('data')) {
+    context.result = context.result.data
+  }
+
+  if (Array.isArray(context.result)) {
+    for(let i in context.result) {
+      if(context.result[i].hasOwnProperty('sender_id')) {
+        context.result[i].sender = await replaceUser(context, context.result[i].sender_id);
+        context.result[i].sender_id = undefined;
+      }
+    }
+  }
+  return context;
+}
 
 async function validate_message(context) {
   if (!context.data.hasOwnProperty('sender_id')) return Promise.reject('Invalid message structure!');
@@ -16,8 +47,7 @@ async function fetch_chat_data(context) {
 
   if (!chat.hasOwnProperty('recievers')) return Promise.reject('Invalid message structure!');
 
-  let recievers = chat.recievers;
-  context.data.recievers = recievers;
+  context.data.recievers = chat.recievers;
   return context;
 }
 
@@ -55,7 +85,7 @@ async function forward_messages(context) {
 module.exports = {
   before: {
     all: [authenticate('jwt')],
-    find: [disallow],
+    find: [],
     get: [],
     create: [validate_message],
     update: [disallow],
@@ -65,7 +95,7 @@ module.exports = {
 
   after: {
     all: [],
-    find: [],
+    find: [resolve_users],
     get: [],
     create: [
       fetch_chat_data,
