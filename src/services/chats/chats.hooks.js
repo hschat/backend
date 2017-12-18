@@ -145,7 +145,7 @@ async function format_chats(context) {
 module.exports = {
   before: {
     all: [authenticate('jwt')],
-    find: [...restrict],
+    find: [],
     get: [...restrict],
     create: [check_for_double],
     update: [],
