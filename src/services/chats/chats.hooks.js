@@ -23,22 +23,22 @@ async function replaceUser(context, id) {
 }
 
 /**
- * Helper function that replaces the reciever ids with its user object.
+ * Helper function that replaces the participant ids with its user object.
  * Used for formatting chat objects after searching them.
  * @param context The context of the request
- * @param recievers The list of the recievers that should get replaced
+ * @param participants The list of the participants that should get replaced
  * @returns {Promise<*>} Returns a promise of the function progress
  */
-async function replaceUsers(context, recievers) {
-  if (!Array.isArray(recievers)) return undefined;
-  for (let v in recievers) {
+async function replaceUsers(context, participants) {
+  if (!Array.isArray(participants)) return undefined;
+  for (let v in participants) {
     // Replace the uuid of the user only when its a string ID, otherwise DB calls will fail
     // becaus of complex objects
-    if (typeof  recievers[v] === 'string') {
-      recievers[v] = await replaceUser(context, recievers[v]);
+    if (typeof  participants[v] === 'string') {
+      participants[v] = await replaceUser(context, participants[v]);
     }
   }
-  return recievers;
+  return participants;
 }
 
 /**
@@ -48,33 +48,48 @@ async function replaceUsers(context, recievers) {
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function check_for_double(context) {
-  let owner = context.data.owner;
-  let recievers = context.data.recievers;
+  let participants = context.data.participants;
+  let type = context.data.type;
 
-  // Only single person chats may be unique
-  if (recievers.length === 1) {
-    return context.app.service('chats').find({
-      query: {
-        owner: owner
-      }
-      // Chats were found
-    }).then(async (result) => {
-      let chats = result.data;
-      console.log('DB Query Result: ', chats);
-      for (let i in chats) {
-        if (chats[i].recievers[0] === recievers[0]) {
-          console.error('Duplicate chat found');
-          chats[i].recievers = await replaceUsers(context, chats[i].recievers);
-          context.result = chats[i];
-          return context;
-        }
-      }
-      // Nothing found, back to normal
-      return context;
-    });
-  }
-  // No identical chats were found
-  return context;
+  // If its a group chat skip checking for doubles
+  if (type === 'group') return context;
+
+  if (type !== 'personal') return undefined;
+
+  // Only allow creation of chats where participants is an array (formal validation error)
+  if (!Array.isArray(participants)) return undefined;
+
+  // Filter for an existing chat
+  return await context.app.service('chats').find({
+    query: {
+      participants: participants
+    }
+  }).then(async (result) => {
+    let chats = [];
+    console.debug('DB Query Result: ', result);
+
+    if (result.total === 0) return context;
+
+    if (result.total > 1) {
+      console.error('User has too many duplicate chats!!');
+      return undefined;
+    }
+
+    console.log('Duplicate chat found');
+
+    await Promise.all(result.data.map(async chat => {
+      chat.participants = await replaceUsers(context, chat.participants);
+      chats.push(chat);
+    }));
+
+    context.result = chats;
+
+    console.debug('Skipping service call from ', context.method, ' with ', context.result);
+
+    // Nothing found, back to normal
+    return context;
+
+  });
 }
 
 
@@ -96,21 +111,26 @@ async function format_chats(context) {
    * }
    */
 
+  console.debug('Returning after ', context.method, ' before finished formatting ', context.result);
+
   if (context.result.hasOwnProperty('data')) {
     context.result = context.result.data;
   }
 
   // Checks if the object is an array to apply the formatting step on each element
+
   if (Array.isArray(context.result)) {
-    let chats = context.result;
+    let chats = [];
 
     // Execute the replacement step of users for each element
-    for (let i in chats) {
+    await Promise.all(context.result.map(async chat => {
       // Replace the recievers array of the users
-      chats[i].recievers = await replaceUsers(context, chats[i].recievers);
-    }
+      chat.participants = await replaceUsers(context, chat.participants);
+      chats.push(chat);
+    }));
 
     context.result = chats;
+    console.log('Inside format :', context.result);
   } else {
     // Check if the return value is a object and has the the property `recievers` apply the replacement process
     if (context.result.hasOwnProperty('recievers')) {
@@ -118,7 +138,7 @@ async function format_chats(context) {
     }
   }
 
-  console.log('Format after ', context.method, context.result);
+  console.debug('Returning after format of ', context.method, context.result);
   return context;
 }
 
