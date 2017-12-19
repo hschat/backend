@@ -19,13 +19,13 @@ async function replaceUser(context, id) {
  * @returns {Promise<*>}
  */
 async function resolve_users(context) {
-  if(context.result.hasOwnProperty('data')) {
-    context.result = context.result.data
+  if (context.result.hasOwnProperty('data')) {
+    context.result = context.result.data;
   }
 
   if (Array.isArray(context.result)) {
-    for(let i in context.result) {
-      if(context.result[i].hasOwnProperty('sender_id')) {
+    for (let i in context.result) {
+      if (context.result[i].hasOwnProperty('sender_id')) {
         context.result[i].sender = await replaceUser(context, context.result[i].sender_id);
         context.result[i].sender_id = undefined;
       }
@@ -39,26 +39,32 @@ async function validate_message(context) {
   if (!context.data.hasOwnProperty('chat_id')) return Promise.reject('Invalid message structure!');
   if (!context.data.hasOwnProperty('text')) return Promise.reject('Invalid message structure!');
   if (!context.data.hasOwnProperty('send_date')) context.data.send_date = Date.now();
+  return context;
 }
 
 async function fetch_chat_data(context) {
   let chat_id = context.data.chat_id;
   let chat = await context.app.service('chats').get(chat_id);
 
-  if (!chat.hasOwnProperty('recievers')) return Promise.reject('Invalid message structure!');
+  if (!chat.hasOwnProperty('participants')) return Promise.reject('Invalid message structure!');
 
-  context.data.recievers = chat.recievers;
+  /*
+  let sender = chat.participants.indexOf(context.data.sender_id);
+  if (sender !== -1) chat.participants.splice(sender, 1);
+  */
+
+  context.data.participants = chat.participants;
   return context;
 }
 
 async function forward_messages(context) {
   // Publish foreach reciever
-  for (let i in context.data.recievers) {
+  for (let i in context.data.participants) {
     // Emit event with data
     await context.app.service('messages').publish('created', async (data) => {
       // Search channels for given reciever
       let channel = context.app.channel(context.app.channels).filter(connection => {
-        return connection.user.id === data.recievers[i];
+        return connection.user.id === data.participants[i];
       });
 
       // If no channel was found return undefined
@@ -73,7 +79,7 @@ async function forward_messages(context) {
       if (user.hasOwnProperty('password')) user.password = undefined;
 
       // Remove unused fields and add required ones
-      data.recievers = undefined;
+      data.participants = undefined;
       data.sender_id = undefined;
       data.sender = user;
 
