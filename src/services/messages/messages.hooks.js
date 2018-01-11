@@ -42,7 +42,7 @@ async function validate_message(context) {
   return context;
 }
 
-async function fetch_chat_data(context) {
+async function forward_messages(context) {
   let chat_id = context.data.chat_id;
   let chat = await context.app.service('chats').get(chat_id);
 
@@ -54,17 +54,15 @@ async function fetch_chat_data(context) {
   */
 
   context.data.participants = chat.participants;
-  return context;
-}
 
-async function forward_messages(context) {
   // Publish foreach reciever
   for (let i in context.data.participants) {
     // Emit event with data
     await context.app.service('messages').publish('created', async (data) => {
-      // Search channels for given reciever
+      // Search channels for given participant
       let channel = context.app.channel(context.app.channels).filter(connection => {
-        return connection.user.id === data.participants[i];
+        console.log(connection.user);
+        return connection.user.id === data.participants[i].id;
       });
 
       // If no channel was found return undefined
@@ -72,6 +70,8 @@ async function forward_messages(context) {
 
       // Try to resolve user id to its instance
       let user = await context.app.service('users').get(context.data.sender_id);
+
+      console.log(user);
 
       // If no user was found the sender must be undefined
       if (user === undefined) return undefined;
@@ -86,6 +86,10 @@ async function forward_messages(context) {
       return channel;
     });
   }
+}
+
+function update_chat(context) {
+  context.app.services('chats').update(context.data.chat_id, {updated_at: Date.now()})
 }
 
 module.exports = {
@@ -104,7 +108,7 @@ module.exports = {
     find: [resolve_users],
     get: [],
     create: [
-      fetch_chat_data,
+      update_chat,
       forward_messages,
     ],
     update: [],
