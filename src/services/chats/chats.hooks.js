@@ -51,6 +51,8 @@ async function check_for_double(context) {
   let participants = context.data.participants;
   let type = context.data.type;
 
+  if(!context.data.hasOwnProperty('created_at')) {context.data.created_at = Date.now()}
+
   // If its a group chat skip checking for doubles
   if (type === 'group') return context;
 
