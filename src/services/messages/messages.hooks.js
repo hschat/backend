@@ -89,7 +89,7 @@ async function forward_messages(context) {
 }
 
 function update_chat(context) {
-  context.app.services('chats').update(context.data.chat_id, {updated_at: Date.now()})
+  context.app.service('chats').update(context.data.chat_id, {updated_at: Date.now()})
 }
 
 module.exports = {
