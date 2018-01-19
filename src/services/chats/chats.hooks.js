@@ -166,7 +166,7 @@ module.exports = {
     ],
     find: [],
     get: [],
-    create: [],
+    create: [format_chats],
     update: [],
     patch: [],
     remove: []
