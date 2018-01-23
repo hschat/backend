@@ -136,13 +136,30 @@ async function format_chats(context) {
     context.result = chats;
     console.log('Inside format :', context.result);
   } else {
-    // Check if the return value is a object and has the the property `recievers` apply the replacement process
-    if (context.result.hasOwnProperty('recievers')) {
-      context.result.recievers = await replaceUsers(context, context.result.recievers);
+    // Check if the return value is a object and has the the property `participants` apply the replacement process
+    if (context.result.hasOwnProperty('participants')) {
+      context.result.participants= await replaceUsers(context, context.result.participants);
     }
   }
 
   console.debug('Returning after format of ', context.method, context.result);
+  return context;
+}
+
+function system_notification(context) {
+  let chat = context.result;
+
+  let msg = {
+    text: 'Der Chat wurde erstellt!',
+    sender_id: undefined,
+    chat_id: chat.id,
+    send_date: Date.now(),
+    recieve_date: undefined,
+    read_date: undefined,
+    system: true,
+  };
+
+  context.app.service('messages').create(msg);
   return context;
 }
 
@@ -197,7 +214,9 @@ module.exports = {
     ],
     find: [],
     get: [],
-    create: [notify_participants],
+    create: [
+      system_notification,
+      notify_participants],
     update: [notify_participants],
     patch: [notify_participants],
     remove: []
