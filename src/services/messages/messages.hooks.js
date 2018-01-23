@@ -35,7 +35,9 @@ async function resolve_users(context) {
 }
 
 async function validate_message(context) {
-  if (!context.data.hasOwnProperty('sender_id')) return Promise.reject('Invalid message structure!');
+  if (!context.data.hasOwnProperty('system')) {
+    if (!context.data.hasOwnProperty('sender_id')) return Promise.reject('Invalid message structure!');
+  }
   if (!context.data.hasOwnProperty('chat_id')) return Promise.reject('Invalid message structure!');
   if (!context.data.hasOwnProperty('text')) return Promise.reject('Invalid message structure!');
   if (!context.data.hasOwnProperty('send_date')) context.data.send_date = Date.now();
