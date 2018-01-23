@@ -45,6 +45,7 @@
     "feathers-mailer": "^2.0.0",
     "feathers-rethinkdb": "^0.5.0",
     "helmet": "^3.9.0",
+    "raven": "^2.3.0",
     "rethinkdbdash": "^2.3.31",
     "serve-favicon": "^2.4.5",
     "winston": "^2.4.0"

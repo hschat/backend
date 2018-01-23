@@ -1,3 +1,8 @@
+if(process.env.hasOwnProperty('SENTRY_DSN')) {
+  const Raven = require('raven');
+  Raven.config(process.env['SENTRY_DSN']).install();
+}
+
 const path = require('path');
 const favicon = require('serve-favicon');
 const compress = require('compression');
