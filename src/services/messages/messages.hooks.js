@@ -70,18 +70,20 @@ async function forward_messages(context) {
       if (channel === undefined) return undefined;
 
       // Try to resolve user id to its instance
-      let user = await context.app.service('users').get(context.data.sender_id);
+      if(!context.data.system) {
+        let user = await context.app.service('users').get(context.data.sender_id);
 
 
-      // If no user was found the sender must be undefined
-      if (user === undefined) return undefined;
-      // Ensure password will not be sent
-      if (user.hasOwnProperty('password')) user.password = undefined;
+        // If no user was found the sender must be undefined
+        if (user === undefined) return undefined;
+        // Ensure password will not be sent
+        if (user.hasOwnProperty('password')) user.password = undefined;
 
-      // Remove unused fields and add required ones
-      data.participants = undefined;
-      data.sender_id = undefined;
-      data.sender = user;
+        // Remove unused fields and add required ones
+        data.participants = undefined;
+        data.sender_id = undefined;
+        data.sender = user;
+      }
 
       return channel;
     });

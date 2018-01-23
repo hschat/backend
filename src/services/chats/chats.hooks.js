@@ -53,7 +53,9 @@ async function check_for_double(context) {
 
   console.log('Participants', participants);
 
-  if(!context.data.hasOwnProperty('created_at')) {context.data.created_at = Date.now()}
+  if (!context.data.hasOwnProperty('created_at')) {
+    context.data.created_at = Date.now();
+  }
 
   // If its a group chat skip checking for doubles
   if (type === 'group') return context;
@@ -66,11 +68,22 @@ async function check_for_double(context) {
   // Filter for an existing chat
   return await context.app.service('chats').find({
     query: {
-      participants: participants
+      $or: [
+        {participants: {$contains: participants[0]}},
+        {participants: {$contains: participants[1]}},
+      ],
+      type: 'personal'
     }
   }).then(async (result) => {
-    let chats = [];
     console.debug('DB Query Result: ', result);
+
+    result.data = result.data.filter((chat) => {
+      let p = chat.participants;
+      return p.length === participants.length && p.every((v, i) => v === participants[i]);
+    });
+    result.total = result.data.length;
+
+    let chat = undefined;
 
     if (result.total === 0) return context;
 
@@ -80,13 +93,14 @@ async function check_for_double(context) {
     }
 
     console.log('Duplicate chat found');
+    context.params.is_double = true;
 
-    await Promise.all(result.data.map(async chat => {
-      chat.participants = await replaceUsers(context, chat.participants);
-      chats.push(chat);
+    await Promise.all(result.data.map(async c => {
+      c.participants = await replaceUsers(context, c.participants);
+      chat = c;
     }));
 
-    context.result = chats;
+    context.result = chat;
 
     console.debug('Skipping service call from ', context.method, ' with ', context.result);
 
@@ -130,6 +144,11 @@ async function format_chats(context) {
     await Promise.all(context.result.map(async chat => {
       // Replace the recievers array of the users
       chat.participants = await replaceUsers(context, chat.participants);
+
+      if (chat.type === 'group') {
+        chat.owner = await replaceUser(context, chat.owner);
+      }
+
       chats.push(chat);
     }));
 
@@ -137,8 +156,9 @@ async function format_chats(context) {
     console.log('Inside format :', context.result);
   } else {
     // Check if the return value is a object and has the the property `participants` apply the replacement process
-    if (context.result.hasOwnProperty('participants')) {
-      context.result.participants= await replaceUsers(context, context.result.participants);
+    if (context.result.hasOwnProperty('participants') && context.result.hasOwnProperty('owner')) {
+      context.result.participants = await replaceUsers(context, context.result.participants);
+      context.result.owner = await replaceUser(context, context.result.owner);
     }
   }
 
@@ -147,6 +167,11 @@ async function format_chats(context) {
 }
 
 function system_notification(context) {
+  if(context.params.hasOwnProperty('is_double') && context.params.is_double) {
+    context.params.is_double = undefined;
+    return context;
+  }
+
   let chat = context.result;
 
   let msg = {
@@ -164,34 +189,34 @@ function system_notification(context) {
 }
 
 async function notify_participants(context) {
-    let chat = context.result;
+  let chat = context.result;
 
-    if (!chat.hasOwnProperty('participants')) return Promise.reject('Invalid message structure!');
+  if (!chat.hasOwnProperty('participants')) return Promise.reject('Invalid message structure!');
 
-    // Publish foreach reciever
-    for (let i in chat.participants) {
+  // Publish foreach reciever
+  for (let i in chat.participants) {
 
-      let m = context.method;
-      if(m === 'create' || m === 'update') {
-        m = `${m}d`;
-      } else {
-        m = `${m}ed`
-      }
-
-      // Emit event with data
-      await context.app.service('chats').publish(m, async (data) => {
-        // Search channels for given participant
-        let channel = context.app.channel(context.app.channels).filter(connection => {
-          return (chat.participants.indexOf(connection.user.id) !== -1);
-        });
-
-        // If no channel was found return undefined
-        if (channel === undefined) return undefined;
-
-        return channel;
-      });
+    let m = context.method;
+    if (m === 'create' || m === 'update') {
+      m = `${m}d`;
+    } else {
+      m = `${m}ed`;
     }
-    return context;
+
+    // Emit event with data
+    await context.app.service('chats').publish(m, async (data) => {
+      // Search channels for given participant
+      let channel = context.app.channel(context.app.channels).filter(connection => {
+        return (chat.participants.indexOf(connection.user.id) !== -1);
+      });
+
+      // If no channel was found return undefined
+      if (channel === undefined) return undefined;
+
+      return channel;
+    });
+  }
+  return context;
 }
 
 module.exports = {
