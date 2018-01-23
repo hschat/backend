@@ -146,6 +146,37 @@ async function format_chats(context) {
   return context;
 }
 
+async function notify_participants(context) {
+    let chat = context.result;
+
+    if (!chat.hasOwnProperty('participants')) return Promise.reject('Invalid message structure!');
+
+    // Publish foreach reciever
+    for (let i in chat.participants) {
+
+      let m = context.method;
+      if(m === 'create' || m === 'update') {
+        m = `${m}d`;
+      } else {
+        m = `${m}ed`
+      }
+
+      // Emit event with data
+      await context.app.service('chats').publish(m, async (data) => {
+        // Search channels for given participant
+        let channel = context.app.channel(context.app.channels).filter(connection => {
+          return (chat.participants.indexOf(connection.user.id) !== -1);
+        });
+
+        // If no channel was found return undefined
+        if (channel === undefined) return undefined;
+
+        return channel;
+      });
+    }
+    return context;
+}
+
 module.exports = {
   before: {
     all: [authenticate('jwt')],
@@ -166,9 +197,9 @@ module.exports = {
     ],
     find: [],
     get: [],
-    create: [format_chats],
-    update: [],
-    patch: [],
+    create: [notify_participants],
+    update: [notify_participants],
+    patch: [notify_participants],
     remove: []
   },
 
