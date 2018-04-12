@@ -3,48 +3,50 @@
 const Sequelize = require('sequelize');
 const DataTypes = Sequelize.DataTypes;
 
-module.exports = function (app) {
-  const sequelizeClient = app.get('sequelizeClient');
-  const chats = sequelizeClient.define('chats', {
-    text: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      default: DataTypes.NOW
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
+module.exports = function(app) {
+	const sequelizeClient = app.get('sequelizeClient');
+	const chats = sequelizeClient.define('chats', {
+		text: {
+			type: DataTypes.TEXT,
+			allowNull: false
+		},
+		created_at: {
+			type: DataTypes.DATE,
+			default: DataTypes.NOW
+		},
+		updated_at: {
+			type: DataTypes.DATE,
+			allowNull: true,
+		},
     id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    participants: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-    },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    }
-  }, {
-    hooks: {
-      beforeCount(options) {
-        options.raw = true;
-      }
-    }
-  });
+			type: DataTypes.UUID,
+			primaryKey: true,
+      default: DataTypes.UUIDV4,
+			// autoIncrement: true,
+      field: "uuid"
+		},
+		participants: {
+			type: DataTypes.ARRAY(DataTypes.STRING),
+			allowNull: false,
+		},
+		type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		}
+	}, {
+		hooks: {
+			beforeCount(options) {
+				options.raw = true;
+			}
+		}
+	});
 
-  chats.associate = function (models) { // eslint-disable-line no-unused-vars
-    // Define associations here
-    // See http://docs.sequelizejs.com/en/latest/docs/associations/
-  };
+	chats.associate = function(models) { // eslint-disable-line no-unused-vars
+		// Define associations here
+		// See http://docs.sequelizejs.com/en/latest/docs/associations/
+	};
 
-  return chats;
+	return chats;
 };
 
 /*
