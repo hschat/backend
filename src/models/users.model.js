@@ -14,7 +14,6 @@ module.exports = function (app) {
     },*/
     created_at: {
       type: DataTypes.DATE,
-      allowNull: false,
       default: DataTypes.NOW
     },
     updated_at: {
