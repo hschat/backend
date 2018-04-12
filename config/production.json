@@ -1,14 +1,5 @@
 {
   "host": "hsc-backend.herokuapp.com",
   "port": "PORT",
-  "rethinkdb": {
-    "db": "DATABASE_NAME",
-    "servers": [
-      {
-        "host": "DATABASE_HOST",
-        "user": "DATABASE_USER",
-        "password": "DATABASE_PASSWORD"
-      }
-    ]
-  }
+  "postgres": "DATABASE_URL"
 }

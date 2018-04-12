@@ -26,7 +26,7 @@ const channels = require('./channels')
 
 const authentication = require('./authentication');
 
-const rethinkdb = require('./rethinkdb');
+const sequelize = require('./sequelize');
 
 const app = express(feathers());
 
@@ -42,7 +42,7 @@ app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
 app.use('/', express.static(app.get('public')));
 
-app.configure(rethinkdb);
+app.configure(sequelize);
 app.configure(rest());
 app.configure(socketio());
 

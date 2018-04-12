@@ -1,10 +1,11 @@
 // Initializes the `messages` service on path `/messages`
-const createService = require('feathers-rethinkdb');
+const createService = require('feathers-sequelize');
+const createModel = require('../../models/messages.model');
 const hooks = require('./messages.hooks');
 
 module.exports = function () {
   const app = this;
-  const Model = app.get('rethinkdbClient');
+  const Model = createModel(app);
   const paginate = app.get('paginate');
 
   const options = {

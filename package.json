@@ -43,10 +43,11 @@
     "feathers-authentication-hooks": "^0.1.5",
     "feathers-hooks-common": "git://github.com/feathers-plus/feathers-hooks-common.git#master",
     "feathers-mailer": "^2.0.0",
-    "feathers-rethinkdb": "^0.5.0",
+    "feathers-sequelize": "^3.1.0",
     "helmet": "^3.9.0",
+    "pg": "^7.4.1",
     "raven": "^2.3.0",
-    "rethinkdbdash": "^2.3.31",
+    "sequelize": "^4.37.6",
     "serve-favicon": "^2.4.5",
     "winston": "^2.4.0"
   },
