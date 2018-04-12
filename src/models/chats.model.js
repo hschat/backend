@@ -18,12 +18,11 @@ module.exports = function (app) {
       type: DataTypes.DATE,
       allowNull: true,
     },
-    /*id: {
-      type: DataTypes.UUID,
-      primaryKey: true
-			default: DataTypes.UUIDV4,
-      allowNull: false,
-    },*/
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     participants: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
