@@ -44,19 +44,19 @@ module.exports = function (app) {
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     meter_to_hs: {
       type: DataTypes.FLOAT,
-      allowNull: false,
+      allowNull: true,
     },
     location_in_hs: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      allowNull: true,
     },
     location_check_time: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     }
   }, {
     hooks: {
