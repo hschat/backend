@@ -19,12 +19,12 @@ module.exports = function (app) {
       type: DataTypes.DATE,
       allowNull: true,
     },
-    id: {
+    /*id: {
       type: DataTypes.UUID,
-      allowNull: false,
-      default: DataTypes.UUIDV4,
       primaryKey: true
-    },
+			default: DataTypes.UUIDV4,
+      allowNull: false,
+    },*/
     participants: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,

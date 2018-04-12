@@ -6,11 +6,12 @@ const DataTypes = Sequelize.DataTypes;
 module.exports = function(app) {
 	const sequelizeClient = app.get('sequelizeClient');
 	const messages = sequelizeClient.define('messages', {
-		id: {
+		/*id: {
 			type: DataTypes.UUID,
-			default: DataTypes.UUIDV4,
       primaryKey: true
-		},
+			default: DataTypes.UUIDV4,
+      allowNull: false,
+		},*/
 		created_at: {
 			type: DataTypes.DATE,
 			default: DataTypes.NOW
