@@ -19,7 +19,6 @@ module.exports = function(app) {
 			type: DataTypes.DATE,
 			allowNull: true,
 		},
-
 		email: {
 			type: DataTypes.STRING,
 			allowNull: false,
