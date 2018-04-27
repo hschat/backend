@@ -1,6 +1,7 @@
 if(process.env.hasOwnProperty('SENTRY_DSN')) {
   const Raven = require('raven');
   Raven.config(process.env['SENTRY_DSN']).install();
+  console.log('Sentry enabled');
 }
 
 const path = require('path');
