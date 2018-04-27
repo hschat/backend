@@ -19,11 +19,9 @@ module.exports = function(app) {
 			allowNull: true,
 		},
     id: {
-			type: DataTypes.UUID,
-			primaryKey: true,
-      default: DataTypes.UUIDV4,
-			// autoIncrement: true,
-      field: "uuid"
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true,
 		},
 		participants: {
 			type: DataTypes.ARRAY(DataTypes.STRING),

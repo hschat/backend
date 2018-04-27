@@ -7,11 +7,9 @@ module.exports = function(app) {
 	const sequelizeClient = app.get('sequelizeClient');
 	const users = sequelizeClient.define('users', {
 		id: {
-			type: DataTypes.UUID,
+			type: DataTypes.BIGINT,
 			primaryKey: true,
-      default: DataTypes.UUIDV4,
-			// autoIncrement: true,
-      field: "uuid"
+			autoIncrement: true,
 		},
 		created_at: {
 			type: DataTypes.DATE,

@@ -7,11 +7,9 @@ module.exports = function(app) {
 	const sequelizeClient = app.get('sequelizeClient');
 	const messages = sequelizeClient.define('messages', {
     id: {
-			type: DataTypes.UUID,
-			primaryKey: true,
-      default: DataTypes.UUIDV4,
-			// autoIncrement: true,
-      field: "uuid"
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true,
 		},
 		created_at: {
 			type: DataTypes.DATE,
