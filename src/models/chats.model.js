@@ -6,22 +6,22 @@ const DataTypes = Sequelize.DataTypes;
 module.exports = function(app) {
 	const sequelizeClient = app.get('sequelizeClient');
 	const chats = sequelizeClient.define('chats', {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
 		text: {
 			type: DataTypes.TEXT,
 			allowNull: false
 		},
-		created_at: {
+		createdAt: {
 			type: DataTypes.DATE,
 			default: DataTypes.NOW
 		},
-		updated_at: {
+		updatedAt: {
 			type: DataTypes.DATE,
 			allowNull: true,
-		},
-    id: {
-      type: DataTypes.BIGINT,
-      primaryKey: true,
-      autoIncrement: true,
 		},
 		participants: {
 			type: DataTypes.ARRAY(DataTypes.STRING),
