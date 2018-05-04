@@ -24,7 +24,7 @@ module.exports = function(app) {
 			allowNull: true,
 		},
 		participants: {
-			type: DataTypes.ARRAY(DataTypes.STRING),
+			type: DataTypes.ARRAY(DataTypes.UUID),
 			allowNull: false,
 		},
 		type: {
