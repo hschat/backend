@@ -23,7 +23,7 @@ const notFound = require('feathers-errors/not-found');
 const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
-const channels = require('./channels')
+const channels = require('./channels');
 
 const authentication = require('./authentication');
 

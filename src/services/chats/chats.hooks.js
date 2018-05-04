@@ -1,6 +1,9 @@
 const {restrictToOwner} = require('feathers-authentication-hooks');
 const {authenticate} = require('@feathersjs/authentication').hooks;
+const hydrate = require('feathers-sequelize/hooks/hydrate');
+const dehydrate = require('feathers-sequelize/hooks/dehydrate');
 const hooks = require('feathers-hooks-common');
+const logger = require('winston');
 
 const restrict = [
   authenticate('jwt'),
@@ -10,35 +13,20 @@ const restrict = [
   })
 ];
 
-/**
- * Helper function for replacing a given user id with its database object
- * @param context The context of the request
- * @param id The uuid of the user
- * @returns {Promise<*>} Returns a promise of the function progress
- */
-async function replaceUser(context, id) {
-  let user = await context.app.service('users').get(id);
-  if (user.hasOwnProperty('password')) user.password = undefined;
-  return user;
+
+async function resolveContext(context) {
+  const userModel = context.app.services.users.Model;
+  context.params.sequelize = {
+    include: [{ model: userModel, as: 'Participants' }]
+  };
+
+  return Promise.resolve(context);
 }
 
-/**
- * Helper function that replaces the participant ids with its user object.
- * Used for formatting chat objects after searching them.
- * @param context The context of the request
- * @param participants The list of the participants that should get replaced
- * @returns {Promise<*>} Returns a promise of the function progress
- */
-async function replaceUsers(context, participants) {
-  if (!Array.isArray(participants)) return undefined;
-  for (let v in participants) {
-    // Replace the uuid of the user only when its a string ID, otherwise DB calls will fail
-    // becaus of complex objects
-    if (typeof  participants[v] === 'string') {
-      participants[v] = await replaceUser(context, participants[v]);
-    }
-  }
-  return participants;
+function rawFalse(context) {
+  if (!context.params.sequelize) context.params.sequelize = {};
+  Object.assign(context.params.sequelize, { raw: false });
+  return context;
 }
 
 /**
@@ -48,13 +36,11 @@ async function replaceUsers(context, participants) {
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function check_for_double(context) {
-  let participants = context.data.participants;
+  //let participants = context.data.participants;
   let type = context.data.type;
 
-  console.log('Participants', participants);
-
-  if (!context.data.hasOwnProperty('created_at')) {
-    context.data.created_at = Date.now();
+  if (!context.data.hasOwnProperty('createdAt')) {
+    context.data.createdAt = Date.now();
   }
 
   // If its a group chat skip checking for doubles
@@ -63,24 +49,31 @@ async function check_for_double(context) {
   if (type !== 'personal') return undefined;
 
   // Only allow creation of chats where participants is an array (formal validation error)
-  if (!Array.isArray(participants)) return undefined;
+  //if (!Array.isArray(participants)) return undefined;
+
+  logger.info(context.data);
+
 
   // Filter for an existing chat
   return await context.app.service('chats').find({
     query: {
+      /*
       $or: [
         {participants: {$contains: participants[0]}},
         {participants: {$contains: participants[1]}},
       ],
+      */
       type: 'personal'
-    }
+    },
   }).then(async (result) => {
     console.debug('DB Query Result: ', result);
 
+    /*
     result.data = result.data.filter((chat) => {
       let p = chat.participants;
       return p.length === participants.length && p.every((v, i) => v === participants[i]);
     });
+    */
     result.total = result.data.length;
 
     let chat = undefined;
@@ -95,10 +88,12 @@ async function check_for_double(context) {
     console.log('Duplicate chat found');
     context.params.is_double = true;
 
+    /*
     await Promise.all(result.data.map(async c => {
       c.participants = await replaceUsers(context, c.participants);
       chat = c;
     }));
+    */
 
     context.result = chat;
 
@@ -141,6 +136,7 @@ async function format_chats(context) {
     let chats = [];
 
     // Execute the replacement step of users for each element
+    /*
     await Promise.all(context.result.map(async chat => {
       // Replace the recievers array of the users
       chat.participants = await replaceUsers(context, chat.participants);
@@ -151,15 +147,19 @@ async function format_chats(context) {
 
       chats.push(chat);
     }));
+    */
 
     context.result = chats;
     console.log('Inside format :', context.result);
   } else {
+
     // Check if the return value is a object and has the the property `participants` apply the replacement process
+    /*
     if (context.result.hasOwnProperty('participants') && context.result.hasOwnProperty('owner')) {
       context.result.participants = await replaceUsers(context, context.result.participants);
       context.result.owner = await replaceUser(context, context.result.owner);
     }
+    */
   }
 
   console.debug('Returning after format of ', context.method, context.result);
@@ -179,7 +179,7 @@ function system_notification(context) {
     sender_id: undefined,
     chat_id: chat.id,
     send_date: Date.now(),
-    recieve_date: undefined,
+    receive_date: undefined,
     read_date: undefined,
     system: true,
   };
@@ -193,7 +193,7 @@ async function notify_participants(context) {
 
   if (!chat.hasOwnProperty('participants')) return Promise.reject('Invalid message structure!');
 
-  // Publish foreach reciever
+  // Publish foreach receiver
   for (let i in chat.participants) {
 
     let m = context.method;
@@ -219,12 +219,19 @@ async function notify_participants(context) {
   return context;
 }
 
+// Or, if you need to include associated models, you can do the following:
+function includeAssociated (context) {
+  return hydrate({
+    include: [{ model: context.app.services.users.Model }]
+  }).call(this, context);
+}
+
 module.exports = {
   before: {
     all: [authenticate('jwt')],
-    find: [],
+    find: [resolveContext],
     get: [...restrict],
-    create: [check_for_double],
+    create: [rawFalse, check_for_double],
     update: [],
     patch: [],
     remove: []
@@ -240,8 +247,11 @@ module.exports = {
     find: [],
     get: [],
     create: [
-      system_notification,
-      notify_participants],
+      hydrate(),
+      includeAssociated,
+      dehydrate(),
+      jooks.populate()
+      ],
     update: [notify_participants],
     patch: [notify_participants],
     remove: []
