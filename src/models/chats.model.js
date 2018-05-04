@@ -11,9 +11,9 @@ module.exports = function (app) {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
-    text: {
+    name: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: true
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -38,7 +38,7 @@ module.exports = function (app) {
   chats.associate = function (models) { // eslint-disable-line no-unused-vars
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
-    chats.belongsToMany(models.users, {as: 'Participants', through: 'chat_participants', foreignKey: 'chatId'});
+    chats.belongsToMany(models.users, {as: 'participants', through: 'chat_participants', foreignKey: 'chatId'});
   };
 
   return chats;

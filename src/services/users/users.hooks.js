@@ -12,14 +12,14 @@ const restrict = [
 ];
 
 async function debug(context) {
-  console.log(context.params, context.data);
+  console.log(context.params);
   return context;
 }
 
 module.exports = {
   before: {
     all: [],
-    find: [ authenticate('jwt'),  debug],
+    find: [ authenticate('jwt')],
     get: [ authenticate('jwt') ],
     create: [ hashPassword() ],
     update: [ ...restrict, hashPassword() ],

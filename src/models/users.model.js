@@ -66,7 +66,7 @@ module.exports = function(app) {
   users.associate = function(models) { // eslint-disable-line no-unused-vars
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
-    users.belongsToMany(models.chats, {as: 'Chats', through: 'chat_participants', foreignKey: 'userId'});
+    users.belongsToMany(models.chats, {as: 'chats', through: 'chat_participants', foreignKey: 'userId'});
   };
 
   return users;
