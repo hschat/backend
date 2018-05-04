@@ -24,7 +24,7 @@ module.exports = function (app) {
       allowNull: false,
       default: DataTypes.NOW
     },
-    recieve_date: {
+    receive_date: {
       type: DataTypes.DATE,
       allowNull: true,
     },

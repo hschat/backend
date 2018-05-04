@@ -179,7 +179,7 @@ function system_notification(context) {
     sender_id: undefined,
     chat_id: chat.id,
     send_date: Date.now(),
-    recieve_date: undefined,
+    receive_date: undefined,
     read_date: undefined,
     system: true,
   };

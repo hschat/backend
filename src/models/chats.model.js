@@ -23,10 +23,6 @@ module.exports = function (app) {
       type: DataTypes.DATE,
       allowNull: true,
     },
-    participants: {
-      type: DataTypes.ARRAY(DataTypes.UUID),
-      allowNull: false,
-    },
     type: {
       type: DataTypes.STRING,
       allowNull: false,
