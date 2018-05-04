@@ -3,52 +3,47 @@
 const Sequelize = require('sequelize');
 const DataTypes = Sequelize.DataTypes;
 
-module.exports = function(app) {
-	const sequelizeClient = app.get('sequelizeClient');
-	const chats = sequelizeClient.define('chats', {
+module.exports = function (app) {
+  const sequelizeClient = app.get('sequelizeClient');
+  const chats = sequelizeClient.define('chats', {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
-		text: {
-			type: DataTypes.TEXT,
-			allowNull: false
-		},
-		createdAt: {
-			type: DataTypes.DATE,
-			default: DataTypes.NOW
-		},
-		updatedAt: {
-			type: DataTypes.DATE,
-			allowNull: true,
-		},
-		participants: {
-			type: DataTypes.ARRAY(DataTypes.UUID),
-			allowNull: false,
-		},
-		type: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		}
-	}, {
-		hooks: {
-			beforeCount(options) {
-				options.raw = true;
-			}
-		}
-	});
+    text: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      default: DataTypes.NOW
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    participants: {
+      type: DataTypes.ARRAY(DataTypes.UUID),
+      allowNull: false,
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    }
+  }, {
+    hooks: {
+      beforeCount(options) {
+        options.raw = true;
+      }
+    }
+  });
 
-	chats.associate = function(models) { // eslint-disable-line no-unused-vars
-		// Define associations here
-		// See http://docs.sequelizejs.com/en/latest/docs/associations/
-	};
+  chats.associate = function (models) { // eslint-disable-line no-unused-vars
+    // Define associations here
+    // See http://docs.sequelizejs.com/en/latest/docs/associations/
+    chats.belongsToMany(models.users, {as: 'Participants', through: 'chat_participants', foreignKey: 'chatId'});
+  };
 
-	return chats;
+  return chats;
 };
-
-/*
-{
-  "id": "94c32f42-a6d7-4a56-bdf4-bfc49d057bc4",
-}
-*/
