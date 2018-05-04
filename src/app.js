@@ -1,7 +1,9 @@
+const logger = require('winston');
+
 if(process.env.hasOwnProperty('SENTRY_DSN')) {
   const Raven = require('raven');
   Raven.config(process.env['SENTRY_DSN']).install();
-  console.log('Sentry enabled');
+  logger.info('Sentry enabled');
 }
 
 const path = require('path');
@@ -23,7 +25,7 @@ const notFound = require('feathers-errors/not-found');
 const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
-const channels = require('./channels')
+const channels = require('./channels');
 
 const authentication = require('./authentication');
 

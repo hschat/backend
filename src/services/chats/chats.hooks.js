@@ -1,6 +1,7 @@
 const {restrictToOwner} = require('feathers-authentication-hooks');
 const {authenticate} = require('@feathersjs/authentication').hooks;
 const hooks = require('feathers-hooks-common');
+const logger = require('winston');
 
 const restrict = [
   authenticate('jwt'),
@@ -51,7 +52,7 @@ async function check_for_double(context) {
   let participants = context.data.participants;
   let type = context.data.type;
 
-  console.log('Participants', participants);
+  logger.debug('Participants', participants);
 
   if (!context.data.hasOwnProperty('created_at')) {
     context.data.created_at = Date.now();
@@ -75,7 +76,7 @@ async function check_for_double(context) {
       type: 'personal'
     }
   }).then(async (result) => {
-    console.debug('DB Query Result: ', result);
+    logger.debug('DB Query Result: ', result);
 
     result.data = result.data.filter((chat) => {
       let p = chat.participants;
@@ -88,11 +89,11 @@ async function check_for_double(context) {
     if (result.total === 0) return context;
 
     if (result.total > 1) {
-      console.error('User has too many duplicate chats!!');
+      logger.error('User has too many duplicate chats!!');
       return undefined;
     }
 
-    console.log('Duplicate chat found');
+    logger.debug('Duplicate chat found');
     context.params.is_double = true;
 
     await Promise.all(result.data.map(async c => {
@@ -102,7 +103,7 @@ async function check_for_double(context) {
 
     context.result = chat;
 
-    console.debug('Skipping service call from ', context.method, ' with ', context.result);
+    logger.info('Skipping service call from ', context.method, ' with ', context.result);
 
     // Nothing found, back to normal
     return context;
@@ -129,7 +130,7 @@ async function format_chats(context) {
    * }
    */
 
-  console.debug('Returning after ', context.method, ' before finished formatting ', context.result);
+  logger.debug('Returning after ', context.method, ' before finished formatting ', context.result);
 
   if (context.result.hasOwnProperty('data')) {
     context.result = context.result.data;
@@ -153,7 +154,7 @@ async function format_chats(context) {
     }));
 
     context.result = chats;
-    console.log('Inside format :', context.result);
+    logger.debug('Inside format :', context.result);
   } else {
     // Check if the return value is a object and has the the property `participants` apply the replacement process
     if (context.result.hasOwnProperty('participants') && context.result.hasOwnProperty('owner')) {
