@@ -20,8 +20,13 @@ module.exports = function (app) {
       allowNull: true
     },
     tags: {
+<<<<<<< master
       type: DataTypes.ARRAY(DataTypes.STRING),
       defaultValue:[]
+=======
+      type: DataTypes.ARRAY(DataTypes.STRING)
+
+>>>>>>> [ADD] restriction to admin and moderator
     },
     createdAt: {
       type: DataTypes.DATE,
