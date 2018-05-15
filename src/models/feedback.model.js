@@ -20,8 +20,8 @@ module.exports = function (app) {
       allowNull: true
     },
     tags: {
-      type: DataTypes.ARRAY(DataTypes.STRING)
-
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      defaultValue:[]
     },
     createdAt: {
       type: DataTypes.DATE,
