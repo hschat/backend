@@ -54,7 +54,11 @@ module.exports = function(app) {
 		location_check_time: {
 			type: DataTypes.DATE,
 			allowNull: true,
-		}
+		},
+    role: {
+      type: DataTypes.STRING,
+      default: 'default',
+    }
 	}, {
 		hooks: {
 			beforeCount(options) {
