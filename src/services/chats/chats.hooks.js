@@ -49,6 +49,7 @@ async function replaceUsers(context, participants) {
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function check_for_double(context) {
+
   let participants = context.data.participants;
   let type = context.data.type;
 
@@ -65,19 +66,17 @@ async function check_for_double(context) {
 
   // Only allow creation of chats where participants is an array (formal validation error)
   if (!Array.isArray(participants)) return undefined;
-
   // Filter for an existing chat
+
   return await context.app.service('chats').find({
     query: {
       $or: [
-        {participants: {$contains: participants[0]}},
-        {participants: {$contains: participants[1]}},
+        {participants: participants}
       ],
       type: 'personal'
     }
   }).then(async (result) => {
     logger.debug('DB Query Result: ', result);
-
     result.data = result.data.filter((chat) => {
       let p = chat.participants;
       return p.length === participants.length && p.every((v, i) => v === participants[i]);
@@ -92,9 +91,9 @@ async function check_for_double(context) {
       logger.error('User has too many duplicate chats!!');
       return undefined;
     }
-
     logger.debug('Duplicate chat found');
     context.params.is_double = true;
+
 
     await Promise.all(result.data.map(async c => {
       c.participants = await replaceUsers(context, c.participants);
@@ -177,7 +176,7 @@ function system_notification(context) {
 
   let msg = {
     text: 'Der Chat wurde erstellt!',
-    sender_id: undefined,
+    sender_id: -1,
     chat_id: chat.id,
     send_date: Date.now(),
     recieve_date: undefined,
@@ -241,7 +240,7 @@ module.exports = {
     find: [],
     get: [],
     create: [
-      system_notification,
+      //system_notification,
       notify_participants],
     update: [notify_participants],
     patch: [notify_participants],

@@ -11,10 +11,6 @@ module.exports = function(app) {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
-		text: {
-			type: DataTypes.TEXT,
-			allowNull: false
-		},
 		createdAt: {
 			type: DataTypes.DATE,
 			default: DataTypes.NOW
