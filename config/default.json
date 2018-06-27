@@ -30,5 +30,5 @@
       "passwordField": "password"
     }
   },
-  "postgres": "postgres://postgres:@localhost:5432/hschat"
+  "postgres": "postgres://postgres:@localhost:5433/hschat"
 }

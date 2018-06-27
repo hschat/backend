@@ -49,6 +49,7 @@
     "pg": "^7.4.1",
     "raven": "^2.3.0",
     "sequelize": "^4.37.6",
+    "sequelize-cli": "^4.0.0",
     "serve-favicon": "^2.4.5",
     "winston": "^2.4.0"
   },

@@ -11,11 +11,15 @@ const restrict = [
   })
 ];
 
+function debug(context) {
+  console.log(context.data, context.params);
+}
+
 module.exports = {
   before: {
     all: [],
     find: [ authenticate('jwt') ],
-    get: [ authenticate('jwt') ],
+    get: [ debug,authenticate('jwt') ],
     create: [ hashPassword() ],
     update: [ ...restrict, hashPassword() ],
     patch: [ ...restrict, hashPassword() ],

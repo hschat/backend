@@ -218,12 +218,14 @@ async function notify_participants(context) {
   }
   return context;
 }
-
+function debug(context) {
+  console.log(context.data, context.params);
+}
 module.exports = {
   before: {
     all: [authenticate('jwt')],
     find: [],
-    get: [...restrict],
+    get: [...restrict, debug],
     create: [check_for_double],
     update: [],
     patch: [],
@@ -241,7 +243,8 @@ module.exports = {
     get: [],
     create: [
       //system_notification,
-      notify_participants],
+      notify_participants
+    ],
     update: [notify_participants],
     patch: [notify_participants],
     remove: []
