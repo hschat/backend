@@ -42,6 +42,7 @@
     "compression": "^1.7.1",
     "cors": "^2.8.4",
     "feathers-authentication-hooks": "^0.1.5",
+    "feathers-authentication-management": "^2.0.1",
     "feathers-hooks-common": "git://github.com/feathers-plus/feathers-hooks-common.git#master",
     "feathers-mailer": "^2.0.0",
     "feathers-sequelize": "^3.1.0",

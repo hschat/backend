@@ -45,7 +45,7 @@ module.exports = {
 
     queryInterface.addColumn(
       'users',
-      '  resetExpires',
+      'resetExpires',
       {
         type: Sequelize.DATE,
       }

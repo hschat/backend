@@ -3,6 +3,7 @@ const jwt = require('@feathersjs/authentication-jwt');
 const local = require('@feathersjs/authentication-local');
 
 
+
 module.exports = function () {
   const app = this;
   const config = app.get('authentication');
@@ -11,6 +12,16 @@ module.exports = function () {
   app.configure(authentication(config));
   app.configure(jwt());
   app.configure(local());
+
+  sendVerificationEmail = options => hook => {
+    if (!hook.params.provider) { return hook; }
+    const user = hook.result
+    if(process.env.GMAIL && hook.data && hook.data.email && user) {
+      accountService(hook.app).notifier('resendVerifySignup', user)
+      return hook
+    }
+    return hook
+  }
 
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
