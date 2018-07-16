@@ -3,8 +3,9 @@ const { restrictToRoles } = require('feathers-authentication-hooks');
 
 function publish(context) {
   console.log('published');
+  console.log('context', context.params.user);
   context.app.service('feedback').publish('created', (data) => {
-    return context.app.channel('authenticated');
+    return context.app.channel('admins');
   });
 }
 
