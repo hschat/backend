@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "postdeploy": "yarn add sequelize-cli; sequelize db:migrate"
+  }
+}
