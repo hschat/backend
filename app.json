@@ -1,4 +1,9 @@
 {
+  "name": "HSCo Chat Backend",
+  "website": "https://www.hschat.app/",
+  "repository": "https://github.com/smarthome-lab/chat-backend",
+  "logo": "https://raw.githubusercontent.com/smarthome-lab/chat-app/master/icon.png",
+  "success_url": "/",
   "scripts": {
     "postdeploy": "yarn add sequelize-cli; sequelize db:migrate"
   }
