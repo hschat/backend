@@ -37,14 +37,16 @@ const app = express(feathers());
 app.configure(configuration());
 
 // Force HTTPS
-app.configure('production', () => {
+
+if (process.NODE_ENV === 'production') {
   app.use((req, res, next) => {
-    if (req.header('x-forwarded-proto') !== 'https')
-      res.redirect(`https://${req.header('host')}${req.url}`)
-    else
-      next()
+    if (req.header('x-forwarded-proto') !== 'https') {
+      res.redirect(`https://${req.header('host')}${req.url}`);
+    } else {
+      next();
+    }
   })
-})
+}
 
 // Enable CORS, security, compression, favicon and body parsing
 app.use(cors());
