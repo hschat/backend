@@ -22,13 +22,13 @@ const restrict = [
 
 module.exports = {
   before: {
-    all: [...restrict],
-    find: [],
-    get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
+    all: [],
+    find: [...restrict],
+    get: [...restrict],
+    create: [authenticate('jwt')],
+    update: [...restrict],
+    patch: [...restrict],
+    remove: [...restrict]
   },
 
   after: {
