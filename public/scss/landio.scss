@@ -327,6 +327,10 @@ $font-family-sans-serif-custom: 'Lato', sans-serif !default;
 
 .icon-logo { font-size: 45px; }
 
+.brand-logo {
+  height: 45px;
+}
+
 .navbar-nav .active > .nav-link {
 
   @include media-breakpoint-down(sm) {
@@ -634,7 +638,7 @@ $custom-min-height: 37.5em; // 600
 .jumbotron {
   padding-top: 7rem;
   margin-bottom: 0;
-  background: #663fb5 url(../img/bg-header.jpg) no-repeat center bottom;
+  background: $brand-primary url(../img/bg-header.jpg) no-repeat center bottom;
   background-size: cover;
   border-radius: 0;
 
@@ -1134,7 +1138,7 @@ figure { position: relative; }
 // --------------------------------------------------
 
 .section-testimonials {
-  background: #663fb5 url(../img/bg-testimonials.jpg) no-repeat center bottom;
+  background: $brand-primary url(../img/bg-testimonials.png) no-repeat center bottom;
   background-size: cover;
 
   .blockquote {

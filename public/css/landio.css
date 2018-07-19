@@ -69,7 +69,7 @@
   content: "\e604"; }
 
 .icon-facebook:before {
-  content: "\e605"; }
+  content: "\ea90"; }
 
 .icon-google:before {
   content: "\e606"; }
@@ -80,8 +80,8 @@
 .icon-heart:before {
   content: "\e607"; }
 
-.icon-linkedin:before {
-  content: "\e608"; }
+.icon-cloud-download:before {
+  content: "\e9c2"; }
 
 .icon-lock:before {
   content: "\e609"; }
@@ -4303,6 +4303,9 @@ a.bg-danger:focus, a.bg-danger:hover {
 .icon-logo {
   font-size: 45px; }
 
+.brand-logo {
+  height: 45px; }
+
 @media (max-width: 767px) {
   .navbar-nav .active > .nav-link {
     color: #E00034; } }
@@ -4529,7 +4532,7 @@ body {
 .jumbotron {
   padding-top: 7rem;
   margin-bottom: 0;
-  background: #663fb5 url(../img/bg-header.jpg) no-repeat center bottom;
+  background: #E00034 url(../img/bg-header.jpg) no-repeat center bottom;
   background-size: cover;
   border-radius: 0; }
   @media (max-width: 767px) {
@@ -4875,7 +4878,7 @@ figure {
   z-index: 10; }
 
 .section-testimonials {
-  background: #663fb5 url(../img/bg-testimonials.jpg) no-repeat center bottom;
+  background: #E00034 url(../img/bg-testimonials.png) no-repeat center bottom;
   background-size: cover; }
   .section-testimonials .blockquote {
     margin: 0 auto 2rem;
