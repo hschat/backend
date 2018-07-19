@@ -1546,6 +1546,7 @@ figure { position: relative; }
 
 .section-footer.bg-inverse {
   color: #fff;
+  background-color: $brand-primary;
 
   .nav-inline > li {
     &.active a {
