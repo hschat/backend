@@ -39,7 +39,7 @@
       <div class="container">
         <a class="navbar-brand" href="#">
           <span class="icon-logo"></span>
-          <span class="sr-only">HSChat</span>
+          <span class="sr-only">Land.io</span>
         </a>
         <a class="navbar-toggler hidden-md-up pull-xs-right" data-toggle="collapse" href="#collapsingNavbar" aria-expanded="false" aria-controls="collapsingNavbar">
         &#9776;
@@ -49,8 +49,8 @@
         </a>
         <div id="collapsingNavbar" class="collapse navbar-toggleable-custom" role="tabpanel" aria-labelledby="collapsingNavbar">
           <ul class="nav navbar-nav pull-xs-right">
-            <li class="nav-item nav-item-toggable">
-              <a class="nav-link" href="./index-carousel.html"><small>NEW</small> Slides<span class="sr-only">(current)</span></a>
+            <li class="nav-item nav-item-toggable active">
+              <a class="nav-link" href="./index.html"><small>NEW</small> Slides <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item nav-item-toggable">
               <a class="nav-link" href="ui-elements.html">UI Kit</a>
@@ -125,11 +125,34 @@
     <!-- Hero Section
     ================================================== -->
 
-    <header class="jumbotron bg-inverse text-xs-center center-vertically" role="banner">
-      <div class="container">
-        <h1 class="display-3">Land.io, blissful innovation.</h1>
-        <h2 class="m-b-3">Craft your journey, <em>absolutely free</em>, with <a href="ui-elements.html" class="jumbolink">Land.io UI kit</a>.</h2>
-        <a class="btn btn-secondary-outline m-b-1" href="http://tympanus.net/codrops/?p=25217" role="button"><span class="icon-sketch"></span>Sketch included</a>
+    <header id="landioCarousel" class="carousel carousel-header slide bg-inverse" data-ride="carousel" data-interval="0" role="banner">
+      <ol class="carousel-indicators">
+        <li data-target="#landioCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#landioCarousel" data-slide-to="1"></li>
+        <li data-target="#landioCarousel" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner" role="listbox">
+        <div class="carousel-item active" style="background-image: url(img/bg-header.jpg);">
+          <div class="carousel-caption">
+            <h1 class="display-3">Bootstrap powered slides.</h1>
+            <h2 class="m-b-3 hidden-sm-down"><em>Yay, Slides!</em> Create CTA slides with <a href="index.html" class="jumbolink">Land.io</a>.</h2>
+            <a class="btn btn-secondary-outline m-b-2" href="http://tympanus.net/codrops/?p=25217" role="button"><span class="icon-sketch"></span>Sketch included</a>
+          </div>
+        </div>
+        <div class="carousel-item" style="background-image: url(img/bg-header-3.jpg);">
+          <div class="carousel-caption">
+            <h1 class="display-3">Land.io, open source.</h1>
+            <h2 class="m-b-3 hidden-sm-down">Includes <strong>all assests</strong> for easy customization.</h2>
+            <a class="btn btn-secondary-outline m-b-2" href="http://tympanus.net/codrops/?p=25217" role="button"><span class="icon-sketch"></span>Sketch included</a>
+          </div>
+        </div>
+        <div class="carousel-item" style="background-image: url(img/bg-header-2.jpg);">
+          <div class="carousel-caption">
+            <h1 class="display-3">Land.io, blissful innovation.</h1>
+            <h2 class="m-b-3 hidden-sm-down">Craft your journey, <em>absolutely free</em>, with <a href="ui-elements.html" class="jumbolink">Land.io UI kit</a>.</h2>
+            <a class="btn btn-secondary-outline m-b-2" href="http://tympanus.net/codrops/?p=25217" role="button"><span class="icon-sketch"></span>Sketch included</a>
+          </div>
+        </div>
         <ul class="nav nav-inline social-share">
           <li class="nav-item"><a class="nav-link" href="#"><span class="icon-twitter"></span> 1024</a></li>
           <li class="nav-item"><a class="nav-link" href="#"><span class="icon-facebook"></span> 562</a></li>
@@ -189,7 +212,7 @@
       </div>
     </section>
 
-    <!-- Video
+    <!-- Videos
     ================================================== -->
 
     <section class="section-video bg-inverse text-xs-center wp wp-4">
@@ -448,12 +471,12 @@
               <small class="media-body media-bottom">
                 &copy; Land.io 2015. <br>
                 Designed by Peter Finlan, developed by Taty Grassini, exclusively for Codrops.
-              </small>
+                </small>
             </div>
           </div>
           <div class="col-md-6 col-lg-7">
             <ul class="nav nav-inline">
-              <li class="nav-item">
+              <li class="nav-item active">
                 <a class="nav-link" href="./index-carousel.html"><small>NEW</small> Slides<span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item"><a class="nav-link" href="ui-elements.html">UI Kit</a></li>

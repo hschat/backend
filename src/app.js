@@ -53,7 +53,7 @@ app.use(helmet());
 app.use(compress());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
+app.use(favicon(path.join(app.get('public'), 'img', 'favicon', 'favicon.ico')));
 // Host the public folder
 app.use('/', express.static(app.get('public')));
 
