@@ -1,5 +1,5 @@
-const {restrictToOwner} = require('feathers-authentication-hooks');
-const {authenticate} = require('@feathersjs/authentication').hooks;
+const { restrictToOwner } = require('feathers-authentication-hooks');
+const { authenticate } = require('@feathersjs/authentication').hooks;
 const hooks = require('feathers-hooks-common');
 const logger = require('winston');
 
@@ -7,8 +7,8 @@ const restrict = [
   authenticate('jwt'),
   restrictToOwner({
     idField: 'id',
-    ownerField: 'owner'
-  })
+    ownerField: 'owner',
+  }),
 ];
 
 /**
@@ -18,7 +18,7 @@ const restrict = [
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function replaceUser(context, id) {
-  let user = await context.app.service('users').get(id);
+  const user = await context.app.service('users').get(id);
   if (user.hasOwnProperty('password')) user.password = undefined;
   return user;
 }
@@ -32,10 +32,10 @@ async function replaceUser(context, id) {
  */
 async function replaceUsers(context, participants) {
   if (!Array.isArray(participants)) return undefined;
-  for (let v in participants) {
+  for (const v in participants) {
     // Replace the uuid of the user only when its a string ID, otherwise DB calls will fail
     // becaus of complex objects
-    if (typeof  participants[v] === 'string') {
+    if (typeof participants[v] === 'string') {
       participants[v] = await replaceUser(context, participants[v]);
     }
   }
@@ -49,9 +49,8 @@ async function replaceUsers(context, participants) {
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function check_for_double(context) {
-
-  let participants = context.data.participants;
-  let type = context.data.type;
+  const participants = context.data.participants;
+  const type = context.data.type;
 
   logger.debug('Participants', participants);
 
@@ -71,19 +70,19 @@ async function check_for_double(context) {
   return await context.app.service('chats').find({
     query: {
       $or: [
-        {participants: participants}
+        { participants },
       ],
-      type: 'personal'
-    }
+      type: 'personal',
+    },
   }).then(async (result) => {
     logger.debug('DB Query Result: ', result);
     result.data = result.data.filter((chat) => {
-      let p = chat.participants;
+      const p = chat.participants;
       return p.length === participants.length && p.every((v, i) => v === participants[i]);
     });
     result.total = result.data.length;
 
-    let chat = undefined;
+    let chat;
 
     if (result.total === 0) return context;
 
@@ -95,7 +94,7 @@ async function check_for_double(context) {
     context.params.is_double = true;
 
 
-    await Promise.all(result.data.map(async c => {
+    await Promise.all(result.data.map(async (c) => {
       c.participants = await replaceUsers(context, c.participants);
       chat = c;
     }));
@@ -106,7 +105,6 @@ async function check_for_double(context) {
 
     // Nothing found, back to normal
     return context;
-
   });
 }
 
@@ -138,10 +136,10 @@ async function format_chats(context) {
   // Checks if the object is an array to apply the formatting step on each element
 
   if (Array.isArray(context.result)) {
-    let chats = [];
+    const chats = [];
 
     // Execute the replacement step of users for each element
-    await Promise.all(context.result.map(async chat => {
+    await Promise.all(context.result.map(async (chat) => {
       // Replace the recievers array of the users
       chat.participants = await replaceUsers(context, chat.participants);
 
@@ -167,14 +165,14 @@ async function format_chats(context) {
 }
 
 function system_notification(context) {
-  if(context.params.hasOwnProperty('is_double') && context.params.is_double) {
+  if (context.params.hasOwnProperty('is_double') && context.params.is_double) {
     context.params.is_double = undefined;
     return context;
   }
 
-  let chat = context.result;
+  const chat = context.result;
 
-  let msg = {
+  const msg = {
     text: 'Der Chat wurde erstellt!',
     sender_id: -1,
     chat_id: chat.id,
@@ -189,13 +187,12 @@ function system_notification(context) {
 }
 
 async function notify_participants(context) {
-  let chat = context.result;
+  const chat = context.result;
 
   if (!chat.hasOwnProperty('participants')) return Promise.reject('Invalid message structure!');
 
   // Publish foreach reciever
-  for (let i in chat.participants) {
-
+  for (const i in chat.participants) {
     let m = context.method;
     if (m === 'create' || m === 'update') {
       m = `${m}d`;
@@ -206,9 +203,7 @@ async function notify_participants(context) {
     // Emit event with data
     await context.app.service('chats').publish(m, async (data) => {
       // Search channels for given participant
-      let channel = context.app.channel(context.app.channels).filter(connection => {
-        return (chat.participants.indexOf(connection.user.id) !== -1);
-      });
+      const channel = context.app.channel(context.app.channels).filter(connection => (chat.participants.indexOf(connection.user.id) !== -1));
 
       // If no channel was found return undefined
       if (channel === undefined) return undefined;
@@ -229,25 +224,25 @@ module.exports = {
     create: [check_for_double],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   after: {
     all: [
       hooks.when(
         hook => hook.params.provider,
-        format_chats
-      )
+        format_chats,
+      ),
     ],
     find: [],
     get: [],
     create: [
-      //system_notification,
-      notify_participants
+      // system_notification,
+      notify_participants,
     ],
     update: [notify_participants],
     patch: [notify_participants],
-    remove: []
+    remove: [],
   },
 
   error: {
@@ -257,6 +252,6 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
-  }
+    remove: [],
+  },
 };

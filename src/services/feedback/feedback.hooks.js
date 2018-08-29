@@ -2,9 +2,8 @@ const { authenticate } = require('@feathersjs/authentication').hooks;
 const { restrictToRoles } = require('feathers-authentication-hooks');
 
 function publish(context) {
-  context.app.service('feedback').publish('created', (data) => {
-    return context.app.channel('admins');
-  });
+ console.log('published');
+  context.app.service('feedback').publish('created', data => context.app.channel('authenticated'));
 }
 
 
@@ -13,8 +12,8 @@ const restrict = [
   restrictToRoles({
     roles: ['admin', 'moderator'],
     fieldName: 'role',
-    idField: 'id'
-  })
+    idField: 'id',
+  }),
 ];
 
 
@@ -27,7 +26,7 @@ module.exports = {
     update: [...restrict],
     patch: [...restrict],
     remove: [...restrict]
-  },
+ },
 
   after: {
     all: [],
@@ -36,7 +35,7 @@ module.exports = {
     create: [publish],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   error: {
@@ -46,6 +45,6 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
-  }
+    remove: [],
+  },
 };

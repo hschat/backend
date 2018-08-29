@@ -1,5 +1,5 @@
-const {authenticate} = require('@feathersjs/authentication').hooks;
-const {disallow, fastJoin} = require('feathers-hooks-common');
+const { authenticate } = require('@feathersjs/authentication').hooks;
+const { disallow, fastJoin } = require('feathers-hooks-common');
 
 /**
  * Helper function for replacing a given user id with its database object
@@ -8,7 +8,7 @@ const {disallow, fastJoin} = require('feathers-hooks-common');
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function replaceUser(context, id) {
-  let user = await context.app.service('users').get(id);
+  const user = await context.app.service('users').get(id);
   if (user.hasOwnProperty('password')) user.password = undefined;
   return user;
 }
@@ -24,7 +24,7 @@ async function resolve_users(context) {
   }
 
   if (Array.isArray(context.result)) {
-    for (let i in context.result) {
+    for (const i in context.result) {
       if (context.result[i].hasOwnProperty('sender_id')) {
         context.result[i].sender = await replaceUser(context, context.result[i].sender_id);
         context.result[i].sender_id = undefined;
@@ -45,8 +45,8 @@ async function validate_message(context) {
 }
 
 async function forward_messages(context) {
-  let chat_id = context.data.chat_id;
-  let chat = await context.app.service('chats').get(chat_id);
+  const chat_id = context.data.chat_id;
+  const chat = await context.app.service('chats').get(chat_id);
 
   if (!chat.hasOwnProperty('participants')) return Promise.reject('Invalid message structure!');
 
@@ -58,20 +58,18 @@ async function forward_messages(context) {
   context.data.participants = chat.participants;
 
   // Publish foreach reciever
-  for (let i in context.data.participants) {
+  for (const i in context.data.participants) {
     // Emit event with data
     await context.app.service('messages').publish('created', async (data) => {
       // Search channels for given participant
-      let channel = context.app.channel(context.app.channels).filter(connection => {
-        return (context.data.participants.indexOf(connection.user.id) !== -1);
-      });
+      const channel = context.app.channel(context.app.channels).filter(connection => (context.data.participants.indexOf(connection.user.id) !== -1));
 
       // If no channel was found return undefined
       if (channel === undefined) return undefined;
 
       // Try to resolve user id to its instance
-      if(!context.data.system) {
-        let user = await context.app.service('users').get(context.data.sender_id);
+      if (!context.data.system) {
+        const user = await context.app.service('users').get(context.data.sender_id);
 
 
         // If no user was found the sender must be undefined
@@ -92,7 +90,7 @@ async function forward_messages(context) {
 }
 
 function update_chat(context) {
-  context.app.service('chats').patch(context.data.chat_id, {updated_at: Date.now()});
+  context.app.service('chats').patch(context.data.chat_id, { updated_at: Date.now() });
   return context;
 }
 
@@ -104,7 +102,7 @@ module.exports = {
     create: [validate_message],
     update: [disallow],
     patch: [],
-    remove: [disallow]
+    remove: [disallow],
   },
 
   after: {
@@ -117,7 +115,7 @@ module.exports = {
     ],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   error: {
@@ -127,6 +125,6 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
-  }
+    remove: [],
+  },
 };

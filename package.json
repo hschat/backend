@@ -23,7 +23,7 @@
   },
   "scripts": {
     "test": "npm run eslint && npm run mocha",
-    "eslint": "eslint src/. test/. --config .eslintrc.json",
+    "eslint": "eslint src/",
     "start": "node src/",
     "mocha": "mocha test/ --recursive --exit"
   },
@@ -56,7 +56,11 @@
     "winston": "^2.4.0"
   },
   "devDependencies": {
-    "eslint": "^4.11.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-flow": "^6.23.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint": "^4.19.1",
+    "eslint-plugin-import": "^2.13.0",
     "mocha": "^4.0.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"

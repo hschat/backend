@@ -1,19 +1,20 @@
 // See http://docs.sequelizejs.com/en/latest/docs/models-definition/
 // for more of what you can do here.
 const Sequelize = require('sequelize');
+
 const DataTypes = Sequelize.DataTypes;
 
-module.exports = function(app) {
+module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
   const users = sequelizeClient.define('users', {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      defaultValue: DataTypes.UUIDV4,
     },
     createdAt: {
       type: DataTypes.DATE,
-      default: DataTypes.NOW
+      default: DataTypes.NOW,
     },
     updatedAt: {
       type: DataTypes.DATE,
@@ -68,21 +69,21 @@ module.exports = function(app) {
       allowNull: false,
     },
     verifyExpires: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
     resetToken: {
       type: DataTypes.STRING,
       allowNull: false,
-    }
+    },
   }, {
     hooks: {
       beforeCount(options) {
         options.raw = true;
-      }
+      },
     },
   });
 
-  users.associate = function(models) { // eslint-disable-line no-unused-vars
+  users.associate = function (models) { // eslint-disable-line no-unused-vars
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
   };

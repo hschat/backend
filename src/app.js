@@ -1,8 +1,8 @@
 const logger = require('winston');
 
-if(process.env.hasOwnProperty('SENTRY_DSN')) {
+if (process.env.hasOwnProperty('SENTRY_DSN')) {
   const Raven = require('raven');
-  Raven.config(process.env['SENTRY_DSN']).install();
+  Raven.config(process.env.SENTRY_DSN).install();
   logger.info('Sentry enabled');
 }
 
@@ -44,7 +44,7 @@ if (process.env.NODE_ENV === 'production') {
     } else {
       next();
     }
-  })
+  });
 }
 
 // Enable CORS, security, compression, favicon and body parsing
@@ -72,7 +72,6 @@ app.use(notFound());
 app.use(handler());
 
 app.hooks(appHooks);
-
 
 
 module.exports = app;

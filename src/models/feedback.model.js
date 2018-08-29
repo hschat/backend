@@ -1,6 +1,7 @@
 // See http://docs.sequelizejs.com/en/latest/docs/models-definition/
 // for more of what you can do here.
 const Sequelize = require('sequelize');
+
 const DataTypes = Sequelize.DataTypes;
 
 module.exports = function (app) {
@@ -9,23 +10,23 @@ module.exports = function (app) {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      defaultValue: DataTypes.UUIDV4,
     },
     text: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
     },
     important: {
       type: DataTypes.BOOLEAN,
-      allowNull: true
+      allowNull: true,
     },
     tags: {
       type: DataTypes.ARRAY(DataTypes.STRING),
-      defaultValue:[]
+      defaultValue: [],
     },
     createdAt: {
       type: DataTypes.DATE,
-      default: DataTypes.NOW
+      default: DataTypes.NOW,
     },
     updatedAt: {
       type: DataTypes.DATE,
@@ -35,8 +36,8 @@ module.exports = function (app) {
     hooks: {
       beforeCount(options) {
         options.raw = true;
-      }
-    }
+      },
+    },
   });
 
   feedback.associate = function (models) { // eslint-disable-line no-unused-vars
