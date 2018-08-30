@@ -12,29 +12,32 @@ module.exports = function (app) {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      default: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    participants: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-    },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  }, {
-    hooks: {
-      beforeCount(options) {
-        options.raw = true;
-      },
-    },
-  });
+		createdAt: {
+			type: DataTypes.DATE,
+			default: DataTypes.NOW
+		},
+		updatedAt: {
+			type: DataTypes.DATE,
+			allowNull: true,
+		},
+		participants: {
+			type: DataTypes.ARRAY(DataTypes.STRING),
+			allowNull: false,
+		},
+		type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+    name: {
+      type: DataTypes.STRING
+    }
+	}, {
+		hooks: {
+			beforeCount(options) {
+				options.raw = true;
+			}
+		}
+	});
 
   chats.associate = function (models) { // eslint-disable-line no-unused-vars
     // Define associations here

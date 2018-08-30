@@ -7,9 +7,9 @@ const restrict = [
   authenticate('jwt'),
   restrictToOwner({
     idField: 'id',
-    ownerField: 'owner',
-  }),
+  })
 ];
+
 
 /**
  * Helper function for replacing a given user id with its database object
@@ -58,6 +58,7 @@ async function check_for_double(context) {
     context.data.created_at = Date.now();
   }
 
+  console.log('da fugg', context.data);
   // If its a group chat skip checking for doubles
   if (type === 'group') return context;
 
@@ -119,8 +120,9 @@ async function format_chats(context) {
    * { total: 1,
    *   data: [{
    *    id: '3c31230b-ed81-4f59-b0ba-5d4667a6995a',
-   *    owner: '231c6fbb-93fb-4ab1-a933-e212bd44ba1b',
-   *    recievers: [Array]
+   *    name: 'David ist dumm',
+   *    type: 'group' | 'personal'
+   *    participants: [Array]
    *   }],
    *  limit: 10,
    *  skip: 0
@@ -134,18 +136,13 @@ async function format_chats(context) {
   }
 
   // Checks if the object is an array to apply the formatting step on each element
-
   if (Array.isArray(context.result)) {
-    const chats = [];
+    let chats = [];
 
     // Execute the replacement step of users for each element
-    await Promise.all(context.result.map(async (chat) => {
+    await Promise.all(context.result.map(async chat => {
       // Replace the recievers array of the users
       chat.participants = await replaceUsers(context, chat.participants);
-
-      if (chat.type === 'group') {
-        chat.owner = await replaceUser(context, chat.owner);
-      }
 
       chats.push(chat);
     }));
@@ -154,25 +151,24 @@ async function format_chats(context) {
     logger.debug('Inside format :', context.result);
   } else {
     // Check if the return value is a object and has the the property `participants` apply the replacement process
-    if (context.result.hasOwnProperty('participants') && context.result.hasOwnProperty('owner')) {
+    if (context.result.hasOwnProperty('participants')) {
       context.result.participants = await replaceUsers(context, context.result.participants);
-      context.result.owner = await replaceUser(context, context.result.owner);
     }
   }
 
-  console.debug('Returning after format of ', context.method, context.result);
+  //console.debug('Returning after format of ', context.method, context.result);
   return context;
 }
 
 function system_notification(context) {
-  if (context.params.hasOwnProperty('is_double') && context.params.is_double) {
+  if(context.params.hasOwnProperty('is_double') && context.params.is_double) {
     context.params.is_double = undefined;
     return context;
   }
 
-  const chat = context.result;
+  let chat = context.result;
 
-  const msg = {
+  let msg = {
     text: 'Der Chat wurde erstellt!',
     sender_id: -1,
     chat_id: chat.id,
@@ -187,12 +183,13 @@ function system_notification(context) {
 }
 
 async function notify_participants(context) {
-  const chat = context.result;
+  let chat = context.result;
 
   if (!chat.hasOwnProperty('participants')) return Promise.reject('Invalid message structure!');
 
   // Publish foreach reciever
-  for (const i in chat.participants) {
+  for (let i in chat.participants) {
+
     let m = context.method;
     if (m === 'create' || m === 'update') {
       m = `${m}d`;
@@ -203,7 +200,9 @@ async function notify_participants(context) {
     // Emit event with data
     await context.app.service('chats').publish(m, async (data) => {
       // Search channels for given participant
-      const channel = context.app.channel(context.app.channels).filter(connection => (chat.participants.indexOf(connection.user.id) !== -1));
+      let channel = context.app.channel(context.app.channels).filter(connection => {
+        return (chat.participants.indexOf(connection.user.id) !== -1);
+      });
 
       // If no channel was found return undefined
       if (channel === undefined) return undefined;
@@ -237,12 +236,12 @@ module.exports = {
     find: [],
     get: [],
     create: [
-      // system_notification,
-      notify_participants,
+      //system_notification,
+      notify_participants
     ],
     update: [notify_participants],
     patch: [notify_participants],
-    remove: [],
+    remove: []
   },
 
   error: {

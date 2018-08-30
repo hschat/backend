@@ -1,6 +1,7 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const { disallow, fastJoin } = require('feathers-hooks-common');
 
+
 /**
  * Helper function for replacing a given user id with its database object
  * @param context The context of the request
@@ -18,7 +19,7 @@ async function replaceUser(context, id) {
  * @param context
  * @returns {Promise<*>}
  */
-async function resolve_users(context) {
+async function resolve_users_find(context) {
   if (context.result.hasOwnProperty('data')) {
     context.result = context.result.data;
   }
@@ -34,6 +35,12 @@ async function resolve_users(context) {
   return context;
 }
 
+async function resolve_users_create(context){
+  context.data.sender=await replaceUser(context, context.data.sender_id);
+  context.data.sender_id = undefined;
+  return context;
+}
+
 async function validate_message(context) {
   if (!context.data.hasOwnProperty('system')) {
     if (!context.data.hasOwnProperty('sender_id')) return Promise.reject('Invalid message structure!');
@@ -41,51 +48,6 @@ async function validate_message(context) {
   if (!context.data.hasOwnProperty('chat_id')) return Promise.reject('Invalid message structure!');
   if (!context.data.hasOwnProperty('text')) return Promise.reject('Invalid message structure!');
   if (!context.data.hasOwnProperty('send_date')) context.data.send_date = Date.now();
-  return context;
-}
-
-async function forward_messages(context) {
-  const chat_id = context.data.chat_id;
-  const chat = await context.app.service('chats').get(chat_id);
-
-  if (!chat.hasOwnProperty('participants')) return Promise.reject('Invalid message structure!');
-
-  /*
-  let sender = chat.participants.indexOf(context.data.sender_id);
-  if (sender !== -1) chat.participants.splice(sender, 1);
-  */
-
-  context.data.participants = chat.participants;
-
-  // Publish foreach reciever
-  for (const i in context.data.participants) {
-    // Emit event with data
-    await context.app.service('messages').publish('created', async (data) => {
-      // Search channels for given participant
-      const channel = context.app.channel(context.app.channels).filter(connection => (context.data.participants.indexOf(connection.user.id) !== -1));
-
-      // If no channel was found return undefined
-      if (channel === undefined) return undefined;
-
-      // Try to resolve user id to its instance
-      if (!context.data.system) {
-        const user = await context.app.service('users').get(context.data.sender_id);
-
-
-        // If no user was found the sender must be undefined
-        if (user === undefined) return undefined;
-        // Ensure password will not be sent
-        if (user.hasOwnProperty('password')) user.password = undefined;
-
-        // Remove unused fields and add required ones
-        data.participants = undefined;
-        data.sender_id = undefined;
-        data.sender = user;
-      }
-
-      return channel;
-    });
-  }
   return context;
 }
 
@@ -107,11 +69,10 @@ module.exports = {
 
   after: {
     all: [],
-    find: [resolve_users],
+    find: [resolve_users_find],
     get: [],
     create: [
-      update_chat,
-      forward_messages,
+      update_chat
     ],
     update: [],
     patch: [],
