@@ -1,6 +1,6 @@
-# backend
+# chat-backend
 
-> 
+[![Build Status](https://travis-ci.org/smarthome-lab/chat-backend.svg?branch=master)](https://travis-ci.org/smarthome-lab/chat-backend)   [![Coverage Status](https://coveralls.io/repos/github/smarthome-lab/chat-backend/badge.svg?branch=enable-coveralls)](https://coveralls.io/github/smarthome-lab/chat-backend?branch=enable-coveralls)
 
 ## About
 
