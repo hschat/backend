@@ -10,3 +10,4 @@ deploy:
   api_key: HEROKU_API_KEY
   app: hsc-backend
   on: master
+after_success: npm run coverage
