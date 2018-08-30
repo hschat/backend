@@ -1,9 +1,11 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const { restrictToRoles } = require('feathers-authentication-hooks');
 
+const logger = require('winston');
+
 function publish(context) {
- console.log('published');
-  context.app.service('feedback').publish('created', data => context.app.channel('authenticated'));
+  logger.debug('Feedback published');
+  context.app.service('feedback').publish('created', () => context.app.channel('authenticated'));
 }
 
 
@@ -25,8 +27,8 @@ module.exports = {
     create: [authenticate('jwt')],
     update: [...restrict],
     patch: [...restrict],
-    remove: [...restrict]
- },
+    remove: [...restrict],
+  },
 
   after: {
     all: [],

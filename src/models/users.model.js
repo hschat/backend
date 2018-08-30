@@ -2,9 +2,9 @@
 // for more of what you can do here.
 const Sequelize = require('sequelize');
 
-const DataTypes = Sequelize.DataTypes;
+const { DataTypes } = Sequelize;
 
-module.exports = function (app) {
+module.exports = (app) => {
   const sequelizeClient = app.get('sequelizeClient');
   const users = sequelizeClient.define('users', {
     id: {
@@ -78,12 +78,14 @@ module.exports = function (app) {
   }, {
     hooks: {
       beforeCount(options) {
+        // eslint-disable-next-line no-param-reassign
         options.raw = true;
       },
     },
   });
 
-  users.associate = function (models) { // eslint-disable-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars
+  users.associate = (models) => {
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
   };

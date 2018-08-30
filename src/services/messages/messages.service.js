@@ -1,15 +1,12 @@
-// Initializes the `messages` service on path `/messages`
 const createService = require('feathers-sequelize');
 const createModel = require('../../models/messages.model');
 const hooks = require('./messages.hooks');
 
-module.exports = function () {
-  const app = this;
+module.exports = (app) => {
   const Model = createModel(app);
   const paginate = app.get('paginate');
 
   const options = {
-    name: 'messages',
     Model,
     paginate,
   };

@@ -18,8 +18,9 @@ const restrict = [
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function replaceUser(context, id) {
-  const user = await context.app.service('users').get(id);
-  if (user.hasOwnProperty('password')) user.password = undefined;
+  const user = await context.app.service('users')
+    .get(id);
+  if (Object.prototype.hasOwnProperty.call(user, 'password')) user.password = undefined;
   return user;
 }
 
@@ -48,13 +49,12 @@ async function replaceUsers(context, participants) {
  * @param context The context of the request
  * @returns {Promise<*>} Returns a promise of the function progress
  */
-async function check_for_double(context) {
-  const participants = context.data.participants;
-  const type = context.data.type;
+async function checkForDouble(context) {
+  const { participants, type } = context.data;
 
   logger.debug('Participants', participants);
 
-  if (!context.data.hasOwnProperty('created_at')) {
+  if (!Object.prototype.hasOwnProperty.call(context.data, 'created_at')) {
     context.data.created_at = Date.now();
   }
 
@@ -68,45 +68,47 @@ async function check_for_double(context) {
   if (!Array.isArray(participants)) return undefined;
   // Filter for an existing chat
 
-  return await context.app.service('chats').find({
-    query: {
-      $or: [
-        { participants },
-      ],
-      type: 'personal',
-    },
-  }).then(async (result) => {
-    logger.debug('DB Query Result: ', result);
-    result.data = result.data.filter((chat) => {
-      const p = chat.participants;
-      return p.length === participants.length && p.every((v, i) => v === participants[i]);
+  return await context.app.service('chats')
+    .find({
+      query: {
+        $or: [
+          { participants },
+        ],
+        type: 'personal',
+      },
+    })
+    .then(async (result) => {
+      logger.debug('DB Query Result: ', result);
+      result.data = result.data.filter((chat) => {
+        const p = chat.participants;
+        return p.length === participants.length && p.every((v, i) => v === participants[i]);
+      });
+      result.total = result.data.length;
+
+      let chat;
+
+      if (result.total === 0) return context;
+
+      if (result.total > 1) {
+        logger.error('User has too many duplicate chats!!');
+        return undefined;
+      }
+      logger.debug('Duplicate chat found');
+      context.params.is_double = true;
+
+
+      await Promise.all(result.data.map(async (c) => {
+        c.participants = await replaceUsers(context, c.participants);
+        chat = c;
+      }));
+
+      context.result = chat;
+
+      logger.info('Skipping service call from ', context.method, ' with ', context.result);
+
+      // Nothing found, back to normal
+      return context;
     });
-    result.total = result.data.length;
-
-    let chat;
-
-    if (result.total === 0) return context;
-
-    if (result.total > 1) {
-      logger.error('User has too many duplicate chats!!');
-      return undefined;
-    }
-    logger.debug('Duplicate chat found');
-    context.params.is_double = true;
-
-
-    await Promise.all(result.data.map(async (c) => {
-      c.participants = await replaceUsers(context, c.participants);
-      chat = c;
-    }));
-
-    context.result = chat;
-
-    logger.info('Skipping service call from ', context.method, ' with ', context.result);
-
-    // Nothing found, back to normal
-    return context;
-  });
 }
 
 
@@ -115,7 +117,7 @@ async function check_for_double(context) {
  * @param context The context of the request
  * @returns {Promise<*>} Returns a promise of the function progress
  */
-async function format_chats(context) {
+async function formatChats(context) {
   /* Example structure from the database
    * { total: 1,
    *   data: [{
@@ -131,7 +133,7 @@ async function format_chats(context) {
 
   logger.debug('Returning after ', context.method, ' before finished formatting ', context.result);
 
-  if (context.result.hasOwnProperty('data')) {
+  if (Object.prototype.hasOwnProperty.call(context.result, 'data')) {
     context.result = context.result.data;
   }
 
@@ -150,18 +152,19 @@ async function format_chats(context) {
     context.result = chats;
     logger.debug('Inside format :', context.result);
   } else {
-    // Check if the return value is a object and has the the property `participants` apply the replacement process
+    // Check if the return value is a object and
+    // has the the property `participants` apply the replacement process
     if (context.result.hasOwnProperty('participants')) {
       context.result.participants = await replaceUsers(context, context.result.participants);
     }
   }
 
-  //console.debug('Returning after format of ', context.method, context.result);
+  logger.debug('Returning after format of ', context.method, context.result);
   return context;
 }
 
-function system_notification(context) {
-  if(context.params.hasOwnProperty('is_double') && context.params.is_double) {
+function sendSystemNotification(context) {
+  if (Object.prototype.hasOwnProperty.call(context.params, 'is_double') && context.params.is_double) {
     context.params.is_double = undefined;
     return context;
   }
@@ -178,19 +181,23 @@ function system_notification(context) {
     system: true,
   };
 
-  context.app.service('messages').create(msg);
+  context.app.service('messages')
+    .create(msg);
   return context;
 }
 
-async function notify_participants(context) {
-  let chat = context.result;
+async function notifyParticipants(context) {
+  const chat = context.result;
 
-  if (!chat.hasOwnProperty('participants')) return Promise.reject('Invalid message structure!');
+  if (!Object.prototype.hasOwnProperty.call(chat, 'participants')) {
+    return Promise.reject(new TypeError('Invalid message structure!'));
+  }
 
   // Publish foreach reciever
-  for (let i in chat.participants) {
-
+  // ToDo: Select proper Object.x (keys, values, entries) method
+  for (const i in chat.participants) {
     let m = context.method;
+
     if (m === 'create' || m === 'update') {
       m = `${m}d`;
     } else {
@@ -198,29 +205,35 @@ async function notify_participants(context) {
     }
 
     // Emit event with data
-    await context.app.service('chats').publish(m, async (data) => {
-      // Search channels for given participant
-      let channel = context.app.channel(context.app.channels).filter(connection => {
-        return (chat.participants.indexOf(connection.user.id) !== -1);
+    await context.app.service('chats')
+      .publish(m, async () => {
+        // Search channels for given participant
+        const channel = context.app.channel(context.app.channels)
+          .filter(connection => {
+            return (chat.participants.indexOf(connection.user.id) !== -1);
+          });
+
+        // If no channel was found return undefined
+        if (channel === undefined) return undefined;
+
+        return channel;
       });
-
-      // If no channel was found return undefined
-      if (channel === undefined) return undefined;
-
-      return channel;
-    });
   }
   return context;
 }
+
 function debug(context) {
-  console.log(context.data, context.params);
+  if (process.env.NODE_ENV !== 'production') {
+    logger.log(context.data, context.params);
+  }
 }
+
 module.exports = {
   before: {
     all: [authenticate('jwt')],
     find: [],
     get: [...restrict, debug],
-    create: [check_for_double],
+    create: [checkForDouble],
     update: [],
     patch: [],
     remove: [],
@@ -230,18 +243,18 @@ module.exports = {
     all: [
       hooks.when(
         hook => hook.params.provider,
-        format_chats,
+        formatChats,
       ),
     ],
     find: [],
     get: [],
     create: [
-      //system_notification,
-      notify_participants
+      sendSystemNotification,
+      notifyParticipants,
     ],
-    update: [notify_participants],
-    patch: [notify_participants],
-    remove: []
+    update: [notifyParticipants],
+    patch: [notifyParticipants],
+    remove: [],
   },
 
   error: {

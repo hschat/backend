@@ -1,5 +1,5 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const { disallow, fastJoin } = require('feathers-hooks-common');
+const { disallow } = require('feathers-hooks-common');
 
 
 /**
@@ -10,7 +10,7 @@ const { disallow, fastJoin } = require('feathers-hooks-common');
  */
 async function replaceUser(context, id) {
   const user = await context.app.service('users').get(id);
-  if (user.hasOwnProperty('password')) user.password = undefined;
+  if (Object.prototype.hasOwnProperty.call(user, 'password')) user.password = undefined;
   return user;
 }
 
@@ -19,39 +19,44 @@ async function replaceUser(context, id) {
  * @param context
  * @returns {Promise<*>}
  */
-async function resolve_users_find(context) {
-  if (context.result.hasOwnProperty('data')) {
-    context.result = context.result.data;
+async function resolveUsers(context) {
+  const c = context;
+  if (Object.prototype.hasOwnProperty.call(c, 'data')) {
+    c.result = context.result.data;
   }
 
   if (Array.isArray(context.result)) {
+    // ToDo: check logic
     for (const i in context.result) {
-      if (context.result[i].hasOwnProperty('sender_id')) {
-        context.result[i].sender = await replaceUser(context, context.result[i].sender_id);
-        context.result[i].sender_id = undefined;
+      if (Object.prototype.hasOwnProperty.call(context.result[i], 'sender_id')) {
+        c.result[i].sender = await replaceUser(context, context.result[i].sender_id);
+        c.result[i].sender_id = undefined;
       }
     }
   }
-  return context;
+  return c;
 }
 
-async function resolve_users_create(context){
+async function resolveUsersOfCreate(context){
   context.data.sender=await replaceUser(context, context.data.sender_id);
   context.data.sender_id = undefined;
   return context;
 }
 
-async function validate_message(context) {
-  if (!context.data.hasOwnProperty('system')) {
-    if (!context.data.hasOwnProperty('sender_id')) return Promise.reject('Invalid message structure!');
+async function validateMessage(context) {
+  const { data } = context;
+
+  if (!Object.prototype.hasOwnProperty.call(data, 'system')) {
+    if (!Object.prototype.hasOwnProperty.call(data, 'sender_id')) return Promise.reject('Invalid message structure!');
   }
-  if (!context.data.hasOwnProperty('chat_id')) return Promise.reject('Invalid message structure!');
-  if (!context.data.hasOwnProperty('text')) return Promise.reject('Invalid message structure!');
-  if (!context.data.hasOwnProperty('send_date')) context.data.send_date = Date.now();
+  if (!Object.prototype.hasOwnProperty.call(data, 'chat_id')) return Promise.reject('Invalid message structure!');
+  if (!Object.prototype.hasOwnProperty.call(data, 'text')) return Promise.reject('Invalid message structure!');
+  if (!Object.prototype.hasOwnProperty.call(data, 'send_date')) data.send_date = Date.now();
+  context.data = data;
   return context;
 }
 
-function update_chat(context) {
+function updateChat(context) {
   context.app.service('chats').patch(context.data.chat_id, { updated_at: Date.now() });
   return context;
 }
@@ -61,7 +66,7 @@ module.exports = {
     all: [authenticate('jwt')],
     find: [],
     get: [],
-    create: [validate_message],
+    create: [validateMessage],
     update: [disallow],
     patch: [],
     remove: [disallow],
@@ -69,10 +74,10 @@ module.exports = {
 
   after: {
     all: [],
-    find: [resolve_users_find],
+    find: [resolveUsers],
     get: [],
     create: [
-      update_chat
+      updateChat
     ],
     update: [],
     patch: [],

@@ -2,11 +2,8 @@
   "name": "backend",
   "description": "",
   "version": "0.0.0",
-  "homepage": "",
+  "homepage": "https://hschat.app/",
   "main": "src",
-  "keywords": [
-    "feathers"
-  ],
   "author": {
     "name": "David Schwarzmann",
     "email": "dev@dschwarz.codes"
@@ -18,51 +15,62 @@
     "test": "test/"
   },
   "engines": {
-    "node": ">= 6.0.0",
+    "node": "^8.0.0",
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "test": "npm run eslint && npm run mocha",
+    "test": "yarn run eslint && yarn run mocha",
     "eslint": "eslint src/",
+    "eslint:watch": "esw -w",
     "start": "node src/",
     "mocha": "mocha test/ --recursive --exit"
   },
   "dependencies": {
-    "@feathersjs/authentication": "^2.0.1",
-    "@feathersjs/authentication-jwt": "^1.0.1",
-    "@feathersjs/authentication-local": "^1.0.1",
-    "@feathersjs/cli": "^3.6.2",
-    "@feathersjs/configuration": "^1.0.1",
-    "@feathersjs/errors": "^3.2.0",
-    "@feathersjs/express": "^1.1.2",
-    "@feathersjs/feathers": "^3.0.1",
-    "@feathersjs/socketio": "^3.0.1",
-    "body-parser": "^1.18.2",
-    "clone": "^2.1.1",
-    "compression": "^1.7.1",
+    "@feathersjs/authentication": "^2.1.7",
+    "@feathersjs/authentication-jwt": "^2.0.1",
+    "@feathersjs/authentication-local": "^1.2.1",
+    "@feathersjs/configuration": "^2.0.0",
+    "@feathersjs/errors": "^3.3.0",
+    "@feathersjs/express": "^1.2.3",
+    "@feathersjs/feathers": "^3.1.7",
+    "@feathersjs/socketio": "^3.2.2",
+    "compression": "^1.7.3",
     "cors": "^2.8.4",
     "feathers-authentication-hooks": "^0.1.5",
     "feathers-authentication-management": "^2.0.1",
     "feathers-hooks-common": "git://github.com/feathers-plus/feathers-hooks-common.git#master",
     "feathers-mailer": "^2.0.0",
-    "feathers-sequelize": "^3.1.0",
+    "feathers-sequelize": "^3.1.2",
     "global": "^4.3.2",
-    "helmet": "^3.9.0",
-    "pg": "^7.4.1",
+    "helmet": "^3.13.0",
+    "pg": "^7.4.3",
     "raven": "^2.3.0",
-    "sequelize": "^4.37.6",
+    "sequelize": "^4.38.0",
     "sequelize-cli": "^4.0.0",
-    "serve-favicon": "^2.4.5",
-    "winston": "^2.4.0"
+    "serve-favicon": "^2.5.0",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-flow": "^6.23.0",
+    "eslint": "^5.3.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint": "^4.19.1",
     "eslint-plugin-import": "^2.13.0",
-    "mocha": "^4.0.1",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "eslint-watch": "^4.0.2"
   }
 }
+
+
+
+
+
+
+
+
+
+
+

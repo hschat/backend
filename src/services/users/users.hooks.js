@@ -1,11 +1,10 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const commonHooks = require('feathers-hooks-common');
 const { restrictToOwner } = require('feathers-authentication-hooks');
-const verifyHooks = require('feathers-authentication-management').hooks;
-
 
 const { hashPassword } = require('@feathersjs/authentication-local').hooks;
-const accountService = require('../../services/authManagement/notifier');
+
+const logger = require('winston');
 
 const restrict = [
   authenticate('jwt'),
@@ -16,14 +15,15 @@ const restrict = [
 ];
 
 function setUserFields(context) {
-  context.data.isVerified = false;
-  context.data.verifyToken = 'false';
-  context.data.resetToken = 'false';
-  return context;
+  const c = context;
+  c.data.isVerified = false;
+  c.data.verifyToken = 'false';
+  c.data.resetToken = 'false';
+  return c;
 }
 
 
-function sendverificationEmail(context) {
+function sendVerificationEmail(context) {
   const email = {
     from: 'no-reply@hschat.app',
     to: context.data.email,
@@ -31,10 +31,10 @@ function sendverificationEmail(context) {
     html: 'This is the email body',
   };
 
-  context.app.service('email').create(email).then((result) => {
-    console.log(`Sent email to ${email.to}!`);
+  context.app.service('email').create(email).then(() => {
+    logger.info(`Sent email to ${email.to}!`);
   }).catch((err) => {
-    console.log(err);
+    logger.error(err);
   });
 
   return context;
@@ -50,7 +50,7 @@ module.exports = {
     update: [...restrict, hashPassword(), commonHooks.disallow('external')],
     patch: [...restrict, hashPassword(), commonHooks.iff(
       commonHooks.isProvider('external'),
-      commonHooks.preventChanges(
+      commonHooks.preventChanges(true,
         'email',
         'isVerified',
         'verifyToken',
@@ -59,8 +59,7 @@ module.exports = {
         'verifyChanges',
         'resetToken',
         'resetShortToken',
-        'resetExpires',
-      ),
+        'resetExpires'),
     )],
     remove: [...restrict],
   },
@@ -74,7 +73,7 @@ module.exports = {
     ],
     find: [],
     get: [],
-    create: [sendverificationEmail],
+    create: [sendVerificationEmail],
     update: [],
     patch: [],
     remove: [],

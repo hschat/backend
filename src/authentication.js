@@ -3,8 +3,7 @@ const jwt = require('@feathersjs/authentication-jwt');
 const local = require('@feathersjs/authentication-local');
 
 
-module.exports = function () {
-  const app = this;
+module.exports = (app) => {
   const config = app.get('authentication');
 
   // Set up authentication with the secret
@@ -12,6 +11,9 @@ module.exports = function () {
   app.configure(jwt());
   app.configure(local());
 
+  /*
+   * Removed since no purpose or usage is visible
+   * Related commit: 6e07afc
   sendVerificationEmail = options => (hook) => {
     if (!hook.params.provider) { return hook; }
     const user = hook.result;
@@ -21,6 +23,7 @@ module.exports = function () {
     }
     return hook;
   };
+  */
 
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used

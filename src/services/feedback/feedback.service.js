@@ -1,9 +1,8 @@
-// Initializes the `feedback` service on path `/feedback`
 const createService = require('feathers-sequelize');
 const createModel = require('../../models/feedback.model');
 const hooks = require('./feedback.hooks');
 
-module.exports = function (app) {
+module.exports = (app) => {
   const Model = createModel(app);
   const paginate = app.get('paginate');
 
