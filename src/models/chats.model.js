@@ -14,7 +14,7 @@ module.exports = (app) => {
     },
     createdAt: {
       type: DataTypes.DATE,
-      default: DataTypes.NOW
+      default: DataTypes.NOW,
     },
     updatedAt: {
       type: DataTypes.DATE,
@@ -36,8 +36,8 @@ module.exports = (app) => {
       beforeCount(options) {
         // eslint-disable-next-line no-param-reassign
         options.raw = true;
-      }
-    }
+      },
+    },
   });
 
   // eslint-disable-next-line no-unused-vars

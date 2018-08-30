@@ -9,7 +9,8 @@ const { disallow } = require('feathers-hooks-common');
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function replaceUser(context, id) {
-  const user = await context.app.service('users').get(id);
+  const user = await context.app.service('users')
+    .get(id);
   if (Object.prototype.hasOwnProperty.call(user, 'password')) user.password = undefined;
   return user;
 }
@@ -20,44 +21,58 @@ async function replaceUser(context, id) {
  * @returns {Promise<*>}
  */
 async function resolveUsers(context) {
-  const c = context;
-  if (Object.prototype.hasOwnProperty.call(c, 'data')) {
-    c.result = context.result.data;
+  const ctx = context;
+  if (Object.prototype.hasOwnProperty.call(ctx, 'data')) {
+    ctx.result = context.result.data;
   }
 
   if (Array.isArray(context.result)) {
-    // ToDo: check logic
-    for (const i in context.result) {
+    for (const i in Object.keys(context.result)) {
       if (Object.prototype.hasOwnProperty.call(context.result[i], 'sender_id')) {
-        c.result[i].sender = await replaceUser(context, context.result[i].sender_id);
-        c.result[i].sender_id = undefined;
+        // ToDo: Improve execution speed by parallelization (no-await-in-loop)
+        ctx.result[i].sender = await replaceUser(context, context.result[i].sender_id);
+        ctx.result[i].sender_id = undefined;
       }
     }
   }
-  return c;
+  return ctx;
 }
 
-async function resolveUsersOfCreate(context){
-  context.data.sender=await replaceUser(context, context.data.sender_id);
-  context.data.sender_id = undefined;
-  return context;
+// ToDo: Evaluate the necessity of the function below
+// eslint-disable-next-line no-unused-vars
+async function resolveUsersOfCreate(context) {
+  const ctx = context;
+  ctx.data.sender = await replaceUser(ctx, ctx.data.sender_id);
+  ctx.data.sender_id = undefined;
+  return ctx;
 }
 
 async function validateMessage(context) {
+  const ctx = context;
   const { data } = context;
 
   if (!Object.prototype.hasOwnProperty.call(data, 'system')) {
-    if (!Object.prototype.hasOwnProperty.call(data, 'sender_id')) return Promise.reject('Invalid message structure!');
+    if (!Object.prototype.hasOwnProperty.call(data, 'sender_id')) {
+      return Promise.reject(new TypeError('Invalid message structure!'));
+    }
   }
-  if (!Object.prototype.hasOwnProperty.call(data, 'chat_id')) return Promise.reject('Invalid message structure!');
-  if (!Object.prototype.hasOwnProperty.call(data, 'text')) return Promise.reject('Invalid message structure!');
+
+  if (!Object.prototype.hasOwnProperty.call(data, 'chat_id')) {
+    return Promise.reject(new TypeError('Invalid message structure!'));
+  }
+
+  if (!Object.prototype.hasOwnProperty.call(data, 'text')) {
+    return Promise.reject(new TypeError('Invalid message structure!'));
+  }
+
   if (!Object.prototype.hasOwnProperty.call(data, 'send_date')) data.send_date = Date.now();
-  context.data = data;
-  return context;
+  ctx.data = data;
+  return ctx;
 }
 
 function updateChat(context) {
-  context.app.service('chats').patch(context.data.chat_id, { updated_at: Date.now() });
+  context.app.service('chats')
+    .patch(context.data.chat_id, { updated_at: Date.now() });
   return context;
 }
 
@@ -77,7 +92,7 @@ module.exports = {
     find: [resolveUsers],
     get: [],
     create: [
-      updateChat
+      updateChat,
     ],
     update: [],
     patch: [],

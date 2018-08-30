@@ -43,6 +43,8 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+app.set('logger', logger);
+
 app.use(helmet());
 app.use(cors());
 app.use(compress());

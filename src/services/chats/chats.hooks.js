@@ -7,7 +7,7 @@ const restrict = [
   authenticate('jwt'),
   restrictToOwner({
     idField: 'id',
-  })
+  }),
 ];
 
 
@@ -37,6 +37,7 @@ async function replaceUsers(context, participants) {
     // Replace the uuid of the user only when its a string ID, otherwise DB calls will fail
     // becaus of complex objects
     if (typeof participants[v] === 'string') {
+      // eslint-disable-next-line no-param-reassign
       participants[v] = await replaceUser(context, participants[v]);
     }
   }
@@ -50,17 +51,17 @@ async function replaceUsers(context, participants) {
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function checkForDouble(context) {
-  const { participants, type } = context.data;
+  const ctx = context;
+  const { participants, type } = ctx.data;
 
   logger.debug('Participants', participants);
 
-  if (!Object.prototype.hasOwnProperty.call(context.data, 'created_at')) {
-    context.data.created_at = Date.now();
+  if (!Object.prototype.hasOwnProperty.call(ctx.data, 'created_at')) {
+    ctx.data.created_at = Date.now();
   }
 
-  console.log('da fugg', context.data);
   // If its a group chat skip checking for doubles
-  if (type === 'group') return context;
+  if (type === 'group') return ctx;
 
   if (type !== 'personal') return undefined;
 
@@ -68,7 +69,7 @@ async function checkForDouble(context) {
   if (!Array.isArray(participants)) return undefined;
   // Filter for an existing chat
 
-  return await context.app.service('chats')
+  return Promise.resolve(ctx.app.service('chats')
     .find({
       query: {
         $or: [
@@ -79,36 +80,41 @@ async function checkForDouble(context) {
     })
     .then(async (result) => {
       logger.debug('DB Query Result: ', result);
+
+      // eslint-disable-next-line no-param-reassign
       result.data = result.data.filter((chat) => {
         const p = chat.participants;
         return p.length === participants.length && p.every((v, i) => v === participants[i]);
       });
+
+      // eslint-disable-next-line no-param-reassign
       result.total = result.data.length;
 
       let chat;
 
-      if (result.total === 0) return context;
+      if (result.total === 0) return ctx;
 
       if (result.total > 1) {
         logger.error('User has too many duplicate chats!!');
         return undefined;
       }
       logger.debug('Duplicate chat found');
-      context.params.is_double = true;
+      ctx.params.is_double = true;
 
 
       await Promise.all(result.data.map(async (c) => {
-        c.participants = await replaceUsers(context, c.participants);
+        // eslint-disable-next-line no-param-reassign
+        c.participants = await replaceUsers(ctx, c.participants);
         chat = c;
       }));
 
-      context.result = chat;
+      ctx.result = chat;
 
-      logger.info('Skipping service call from ', context.method, ' with ', context.result);
+      logger.info('Skipping service call from ', ctx.method, ' with ', ctx.result);
 
       // Nothing found, back to normal
-      return context;
-    });
+      return ctx;
+    }));
 }
 
 
@@ -130,48 +136,53 @@ async function formatChats(context) {
    *  skip: 0
    * }
    */
+  const ctx = context;
 
-  logger.debug('Returning after ', context.method, ' before finished formatting ', context.result);
+  logger.debug('Returning after ', ctx.method, ' before finished formatting ', ctx.result);
 
-  if (Object.prototype.hasOwnProperty.call(context.result, 'data')) {
-    context.result = context.result.data;
+  if ({}.hasOwnProperty.call(ctx.result, 'data')) {
+    ctx.result = ctx.result.data;
   }
 
   // Checks if the object is an array to apply the formatting step on each element
-  if (Array.isArray(context.result)) {
-    let chats = [];
+  if (Array.isArray(ctx.result)) {
+    const chats = [];
 
     // Execute the replacement step of users for each element
-    await Promise.all(context.result.map(async chat => {
+    await Promise.all(ctx.result.map(async (chat) => {
+      const c = chat;
       // Replace the recievers array of the users
-      chat.participants = await replaceUsers(context, chat.participants);
+      c.participants = await replaceUsers(ctx, chat.participants);
 
-      chats.push(chat);
+      chats.push(c);
     }));
 
-    context.result = chats;
-    logger.debug('Inside format :', context.result);
-  } else {
-    // Check if the return value is a object and
-    // has the the property `participants` apply the replacement process
-    if (context.result.hasOwnProperty('participants')) {
-      context.result.participants = await replaceUsers(context, context.result.participants);
-    }
+    ctx.result = chats;
+    logger.debug('Inside format :', ctx.result);
   }
 
-  logger.debug('Returning after format of ', context.method, context.result);
-  return context;
+  // Check if the return value is a object and
+  // has the the property `participants` apply the replacement process
+  if ({}.hasOwnProperty.call(ctx.result, 'participants')) {
+    ctx.result.participants = await replaceUsers(ctx, ctx.result.participants);
+  }
+
+  logger.debug('Returning after format of ', ctx.method, ctx.result);
+  return ctx;
 }
 
+// ToDo: Evaluate the necessity of the function below
+// eslint-disable-next-line no-unused-vars
 function sendSystemNotification(context) {
   if (Object.prototype.hasOwnProperty.call(context.params, 'is_double') && context.params.is_double) {
+    // eslint-disable-next-line no-param-reassign
     context.params.is_double = undefined;
     return context;
   }
 
-  let chat = context.result;
+  const chat = context.result;
 
-  let msg = {
+  const msg = {
     text: 'Der Chat wurde erstellt!',
     sender_id: -1,
     chat_id: chat.id,
@@ -194,30 +205,30 @@ async function notifyParticipants(context) {
   }
 
   // Publish foreach reciever
-  // ToDo: Select proper Object.x (keys, values, entries) method
-  for (const i in chat.participants) {
-    let m = context.method;
+  // eslint-disable-next-line no-unused-vars
+  for (const i in Object.keys(chat.participants)) {
+    if ({}.hasOwnProperty.call(context, 'method')) {
+      let m = context.method;
 
-    if (m === 'create' || m === 'update') {
-      m = `${m}d`;
-    } else {
-      m = `${m}ed`;
+      if (m === 'create' || m === 'update') {
+        m = `${m}d`;
+      } else {
+        m = `${m}ed`;
+      }
+
+      // Emit event with data
+      await context.app.service('chats')
+        .publish(m, async () => {
+          // Search channels for given participant
+          const channel = context.app.channel(context.app.channels)
+            .filter(connection => (chat.participants.indexOf(connection.user.id) !== -1));
+
+          // If no channel was found return undefined
+          if (channel === undefined) return undefined;
+
+          return channel;
+        });
     }
-
-    // Emit event with data
-    await context.app.service('chats')
-      .publish(m, async () => {
-        // Search channels for given participant
-        const channel = context.app.channel(context.app.channels)
-          .filter(connection => {
-            return (chat.participants.indexOf(connection.user.id) !== -1);
-          });
-
-        // If no channel was found return undefined
-        if (channel === undefined) return undefined;
-
-        return channel;
-      });
   }
   return context;
 }
@@ -249,7 +260,7 @@ module.exports = {
     find: [],
     get: [],
     create: [
-      sendSystemNotification,
+      // sendSystemNotification,
       notifyParticipants,
     ],
     update: [notifyParticipants],

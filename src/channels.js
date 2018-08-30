@@ -1,5 +1,4 @@
 module.exports = (app) => {
-
   /**
    * helper function to join a user all the channels he belongs to
    * @param user the user who has to join his channels
@@ -23,31 +22,27 @@ module.exports = (app) => {
       app.channel(`chats/${chat.id}`)
         .join(connection);
     });
-
   };
 
   /**
    * kicks a users out of all channels
    * @param user
    */
-  const leaveChannels = user => {
-    return app.channel(app.channels)
-      .leave(connection =>
-        connection.user.id === user.id
-      );
-  };
+  const leaveChannels = user => app.channel(app.channels)
+    .leave(connection => connection.user.id === user.id);
 
   /**
    * helper function if the channel informations of a user chances
    * leaves and reenter all channels
    * @param user
+   *
+   * ToDo: Evaluate the necessity of the function below
    */
+  // eslint-disable-next-line no-unused-vars
   const updateChannels = async (user) => {
     // Find all connections for this user
     const { connections } = app.channel(app.channels)
-      .filter(connection =>
-        connection.user.id === user.id
-      );
+      .filter(connection => connection.user.id === user.id);
 
     // Leave all channels
     await leaveChannels(user);
@@ -57,7 +52,6 @@ module.exports = (app) => {
   };
 
   app.on('connection', (connection) => {
-
     // On a new real-time connection, add it to the
     // anonymous channel
     app.channel('anonymous')
@@ -92,17 +86,15 @@ module.exports = (app) => {
 
   // Register created event for a chat
   app.service('chats')
-    .publish('created', (data) => {
-      return app.channel(`chats/${data.id}`);
-    });
+    .publish('created', data => app.channel(`chats/${data.id}`));
 
-  app.service('messages')
-    .publish('created', async (data) => {
-      data.sender = await app.service('users')
-        .get(data.sender_id);
-      data.sender_id = undefined;
-      return app.channel(`chats/${data.chat_id}`);
-    });
+  app.service('messages').publish('created', async (data) => {
+    // eslint-disable-next-line no-param-reassign
+    data.sender = await app.service('users').get(data.sender_id);
+    // eslint-disable-next-line no-param-reassign
+    data.sender_id = undefined;
+    return app.channel(`chats/${data.chat_id}`);
+  });
 
   app.service('chats')
     .hooks({
