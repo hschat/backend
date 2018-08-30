@@ -1,9 +1,12 @@
 language: node_js
 node_js:
   - "lts/*"
+services:
+  - postgresql
 cache: yarn
 install: yarn
 before_script:
+  - psql -c 'create database hschat;' -U postgres
 script:
 deploy:
   provider: heroku
