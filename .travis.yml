@@ -1,16 +1,17 @@
 language: node_js
 node_js:
-  - "lts/*"
+- lts/*
 services:
-  - postgresql
+- postgresql
 cache: yarn
 install: yarn
 before_script:
-  - psql -c 'create database hschat;' -U postgres
-script:
+- psql -c 'create database hschat;' -U postgres
+script: 
 deploy:
   provider: heroku
-  api_key: HEROKU_API_KEY
+  api_key:
+    secure: KOzRBj1B2POr3C01qIYKih6h1hWAJPQomBZp6HJqGlPWiN3+Lw7etdFDcSC1eMDeMfqfQ1GE7/YjGWRAvLsxrGbfSjW0exTXaZRJpwFV9XoEECLkyCjOvdhrLJXJ3hmlQ1rKDMCuh3AS7mXPZRCa6xB42LXTYDajgwnYcAcvni7181jqds4yuNe8z87oRxwtCTkk5Yxo3/WBlHVQRSyRmtDgIry1NuTNsfjSUxe3Uxc3ztOUYhEKbXevi9dynIx3JkMWteXqjuPE2McHExywCr48vQEghJVsl+Sz12c/p5mK6vVg/fL0ugY9YHjkOUATyq7Nzzs2mfkt+k697OjDkUpfBqgogvs0rQdtEkSTuLm90WnTfCqvKTcs9oYcmDU0clAafjtNpj/RrZwq8DEb8JfE2inuWKBB7gpVFUPud0F9g5X5zukeG1eko3amFGNquiW6W2B6BPTFw328PTHHxyygWXd6qM2UDWKE14RXflGovLR5NC5iKNrO8eD2ohe07lRHYW+r7tY/IKKFsHiu1sElbpbfO6GOrWHGHGkJh6K/BUQ+917o0DDo8mPR7qx2rOBmky7mwSMU4oORV0KOb1X3g4hlXV9HDgRpM2gOMv8qDWDFUYHfulZIAyCgX//pQtY6FpvLa1TQDqwaILQLXug4WACAGUvLbeYCT9ZV130=
   app: hsc-backend
   on: master
 after_success: npm run coverage
