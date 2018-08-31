@@ -1,6 +1,6 @@
 const logger = require('winston');
 
-if (Object.prototype.hasOwnProperty.call(process.env, 'SENTRY_DSN')) {
+if ({}.hasOwnProperty.call(process.env, 'SENTRY_DSN')) {
   // eslint-disable-next-line global-require
   const Raven = require('raven');
   Raven.config(process.env.SENTRY_DSN).install();

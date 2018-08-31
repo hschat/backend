@@ -1,6 +1,6 @@
 # chat-backend
 
-[![Build Status](https://travis-ci.org/smarthome-lab/chat-backend.svg?branch=master)](https://travis-ci.org/smarthome-lab/chat-backend)   [![Coverage Status](https://coveralls.io/repos/github/smarthome-lab/chat-backend/badge.svg?branch=enable-coveralls)](https://coveralls.io/github/smarthome-lab/chat-backend?branch=enable-coveralls)
+[![Build Status](https://travis-ci.org/smarthome-lab/chat-backend.svg?branch=master)](https://travis-ci.org/smarthome-lab/chat-backend)   [![Maintainability](https://api.codeclimate.com/v1/badges/0ac623551e828a20e367/maintainability)](https://codeclimate.com/github/smarthome-lab/chat-backend/maintainability)   [![Test Coverage](https://api.codeclimate.com/v1/badges/0ac623551e828a20e367/test_coverage)](https://codeclimate.com/github/smarthome-lab/chat-backend/test_coverage)   [![Coverage Status](https://coveralls.io/repos/github/smarthome-lab/chat-backend/badge.svg?branch=enable-coveralls)](https://coveralls.io/github/smarthome-lab/chat-backend?branch=enable-coveralls)
 
 ## About
 
