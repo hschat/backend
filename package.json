@@ -23,7 +23,7 @@
     "eslint": "eslint src/",
     "eslint:watch": "esw -w",
     "start": "node src/",
-    "mocha": "mocha test/ --recursive --exit",
+    "mocha": "nyc mocha test/ --recursive --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
