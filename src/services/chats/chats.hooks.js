@@ -2,12 +2,32 @@ const { restrictToOwner } = require('feathers-authentication-hooks');
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const hooks = require('feathers-hooks-common');
 const logger = require('winston');
+const errors = require('@feathersjs/errors');
+
+async function restrictParticipant(context) {
+  const { user } = context.params;
+
+  context.result = context.result.data;
+
+  console.log('----------\n',context);
+  console.log('----------\n',context.params);
+  console.log('----------\n',context.result);
+
+  if (user === undefined) return context; //throw new errors.Forbidden('You do not have permission to access this.');
+
+  console.log(context.result);
+
+  return context;
+}
+
 
 const restrict = [
   authenticate('jwt'),
   restrictToOwner({
     idField: 'id',
   }),
+  // :TODO https://github.com/feathersjs-ecosystem/feathers-authentication-hooks#queryWithCurrentUser
+  //(context) => {context.params.user_obj = context.params.user; return context;},
 ];
 
 /**
@@ -17,9 +37,11 @@ const restrict = [
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function replaceUser(context, id) {
-  const user = await context.app.service('users').get(id);
-  if (Object.prototype.hasOwnProperty.call(user, 'password'))
+  const user = await context.app.service('users')
+    .get(id);
+  if (Object.prototype.hasOwnProperty.call(user, 'password')) {
     user.password = undefined;
+  }
   return user;
 }
 
@@ -210,7 +232,8 @@ function sendSystemNotification(context) {
     system: true,
   };
 
-  context.app.service('messages').create(msg);
+  context.app.service('messages')
+    .create(msg);
   return context;
 }
 
@@ -234,19 +257,20 @@ async function notifyParticipants(context) {
       }
 
       // Emit event with data
-      await context.app.service('chats').publish(m, async () => {
-        // Search channels for given participant
-        const channel = context.app
-          .channel(context.app.channels)
-          .filter(
-            connection => chat.participants.indexOf(connection.user.id) !== -1
-          );
+      await context.app.service('chats')
+        .publish(m, async () => {
+          // Search channels for given participant
+          const channel = context.app
+            .channel(context.app.channels)
+            .filter(
+              connection => chat.participants.indexOf(connection.user.id) !== -1
+            );
 
-        // If no channel was found return undefined
-        if (channel === undefined) return undefined;
+          // If no channel was found return undefined
+          if (channel === undefined) return undefined;
 
-        return channel;
-      });
+          return channel;
+        });
     }
   }
   return context;
@@ -261,9 +285,11 @@ function debug(context) {
 module.exports = {
   before: {
     all: [authenticate('jwt')],
-    find: [],
+    find: [...restrict],
     get: [...restrict, debug],
-    create: [checkForDouble],
+    create: [
+      checkForDouble
+    ],
     update: [],
     patch: [],
     remove: [],
@@ -271,14 +297,22 @@ module.exports = {
 
   after: {
     all: [hooks.when(hook => hook.params.provider, formatChats)],
-    find: [],
-    get: [],
+    find: [
+      //restrictParticipant,
+    ],
+    get: [
+      //restrictParticipant,
+    ],
     create: [
       // sendSystemNotification,
-      notifyParticipants,
+      //notifyParticipants,
     ],
-    update: [notifyParticipants],
-    patch: [notifyParticipants],
+    update: [
+      //notifyParticipants
+    ],
+    patch: [
+      //notifyParticipants
+    ],
     remove: [],
   },
 

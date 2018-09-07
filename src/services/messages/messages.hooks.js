@@ -8,9 +8,11 @@ const { disallow } = require('feathers-hooks-common');
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function replaceUser(context, id) {
-  const user = await context.app.service('users').get(id);
-  if (Object.prototype.hasOwnProperty.call(user, 'password'))
+  const user = await context.app.service('users')
+    .get(id);
+  if (Object.prototype.hasOwnProperty.call(user, 'password')) {
     user.password = undefined;
+  }
   return user;
 }
 
@@ -21,19 +23,18 @@ async function replaceUser(context, id) {
  */
 async function resolveUsers(context) {
   const ctx = context;
-  if (Object.prototype.hasOwnProperty.call(ctx, 'data')) {
-    ctx.result = context.result.data;
+
+  if ({}.hasOwnProperty.call(ctx.result, 'data')) {
+    ctx.result = ctx.result.data;
   }
 
-  if (Array.isArray(context.result)) {
-    for (const i in Object.keys(context.result)) {
-      if (
-        Object.prototype.hasOwnProperty.call(context.result[i], 'sender_id')
-      ) {
+  if (Array.isArray(ctx.result)) {
+    for (const i in Object.keys(ctx.result)) {
+      if ({}.hasOwnProperty.call(ctx.result[i], 'sender_id')) {
         // ToDo: Improve execution speed by parallelization (no-await-in-loop)
         ctx.result[i].sender = await replaceUser(
-          context,
-          context.result[i].sender_id
+          ctx,
+          ctx.result[i].sender_id
         );
         ctx.result[i].sender_id = undefined;
       }
@@ -69,16 +70,24 @@ async function validateMessage(context) {
     return Promise.reject(new TypeError('Invalid message structure!'));
   }
 
-  if (!Object.prototype.hasOwnProperty.call(data, 'send_date'))
+  if (!Object.prototype.hasOwnProperty.call(data, 'send_date')) {
     data.send_date = Date.now();
+  }
   ctx.data = data;
   return ctx;
 }
 
-function updateChat(context) {
+async function updateChat(context) {
   context.app
     .service('chats')
     .patch(context.data.chat_id, { updated_at: Date.now() });
+
+  // ToDo: Move into separate function
+  context.result.sender = await replaceUser(
+    context,
+    context.result.sender_id
+  );
+  context.result.sender_id = undefined;
   return context;
 }
 
