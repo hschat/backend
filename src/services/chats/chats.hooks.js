@@ -5,22 +5,6 @@ const hooks = require('feathers-hooks-common');
 const logger = require('winston');
 const errors = require('@feathersjs/errors');
 
-async function restrictParticipant(context) {
-  const { user } = context.params;
-
-  context.result = context.result.data;
-
-  console.log('----------\n', context);
-  console.log('----------\n', context.params);
-  console.log('----------\n', context.result);
-
-  if (user === undefined) return context; // throw new errors.Forbidden('You do not have permission to access this.');
-
-  console.log(context.result);
-
-  return context;
-}
-
 const restrict = [
   authenticate('jwt'),
   restrictToOwner({
@@ -235,44 +219,6 @@ function sendSystemNotification(context) {
   return context;
 }
 
-async function notifyParticipants(context) {
-  const chat = context.result;
-
-  if (!Object.prototype.hasOwnProperty.call(chat, 'participants')) {
-    return Promise.reject(new TypeError('Invalid message structure!'));
-  }
-
-  // Publish foreach reciever
-  // eslint-disable-next-line no-unused-vars
-  for (const i in Object.keys(chat.participants)) {
-    if ({}.hasOwnProperty.call(context, 'method')) {
-      let m = context.method;
-
-      if (m === 'create' || m === 'update') {
-        m = `${m}d`;
-      } else {
-        m = `${m}ed`;
-      }
-
-      // Emit event with data
-      await context.app.service('chats').publish(m, async () => {
-        // Search channels for given participant
-        const channel = context.app
-          .channel(context.app.channels)
-          .filter(
-            connection => chat.participants.indexOf(connection.user.id) !== -1
-          );
-
-        // If no channel was found return undefined
-        if (channel === undefined) return undefined;
-
-        return channel;
-      });
-    }
-  }
-  return context;
-}
-
 function debug(context) {
   if (process.env.NODE_ENV !== 'production') {
     logger.log(context.data, context.params);
@@ -299,13 +245,12 @@ module.exports = {
             //throw new Error('You are not allowed to access this information.');
              return hook;
           }
-
           throw new Error('There is no current user to associate.');
         }
 
         console.log('USER ENTITY:', userEntity);
 
-        const {id} = userEntity;
+        const { id } = userEntity;
 
         if (id === undefined) {
           throw new Error(
@@ -317,7 +262,7 @@ module.exports = {
 
 
         hook.params.query.participants = {
-          '$contains': id
+          '$contains': [id]
         };
 
         console.log('HOOOK:', hook.params);
