@@ -25,6 +25,7 @@ module.exports = app => {
       participants: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
+        defaultValue: [],
       },
       type: {
         type: DataTypes.STRING,
