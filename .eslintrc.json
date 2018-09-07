@@ -1,5 +1,11 @@
 {
-  "extends": "airbnb-base",
+  "extends": [
+    "airbnb-base",
+    "prettier"
+  ],
+  "plugins": [
+    "prettier"
+  ],
   "parserOptions": {
     "ecmaVersion": 2017,
     "sourceType": "module"
@@ -10,6 +16,7 @@
     "mocha": true
   },
   "rules": {
+    "prettier/prettier": "error",
     "no-await-in-loop": "off",
     "no-restricted-syntax": "off",
     "indent": [

@@ -1,7 +1,6 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const { disallow } = require('feathers-hooks-common');
 
-
 /**
  * Helper function for replacing a given user id with its database object
  * @param context The context of the request
@@ -9,9 +8,9 @@ const { disallow } = require('feathers-hooks-common');
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function replaceUser(context, id) {
-  const user = await context.app.service('users')
-    .get(id);
-  if (Object.prototype.hasOwnProperty.call(user, 'password')) user.password = undefined;
+  const user = await context.app.service('users').get(id);
+  if (Object.prototype.hasOwnProperty.call(user, 'password'))
+    user.password = undefined;
   return user;
 }
 
@@ -28,9 +27,14 @@ async function resolveUsers(context) {
 
   if (Array.isArray(context.result)) {
     for (const i in Object.keys(context.result)) {
-      if (Object.prototype.hasOwnProperty.call(context.result[i], 'sender_id')) {
+      if (
+        Object.prototype.hasOwnProperty.call(context.result[i], 'sender_id')
+      ) {
         // ToDo: Improve execution speed by parallelization (no-await-in-loop)
-        ctx.result[i].sender = await replaceUser(context, context.result[i].sender_id);
+        ctx.result[i].sender = await replaceUser(
+          context,
+          context.result[i].sender_id
+        );
         ctx.result[i].sender_id = undefined;
       }
     }
@@ -65,13 +69,15 @@ async function validateMessage(context) {
     return Promise.reject(new TypeError('Invalid message structure!'));
   }
 
-  if (!Object.prototype.hasOwnProperty.call(data, 'send_date')) data.send_date = Date.now();
+  if (!Object.prototype.hasOwnProperty.call(data, 'send_date'))
+    data.send_date = Date.now();
   ctx.data = data;
   return ctx;
 }
 
 function updateChat(context) {
-  context.app.service('chats')
+  context.app
+    .service('chats')
     .patch(context.data.chat_id, { updated_at: Date.now() });
   return context;
 }
@@ -91,9 +97,7 @@ module.exports = {
     all: [],
     find: [resolveUsers],
     get: [],
-    create: [
-      updateChat,
-    ],
+    create: [updateChat],
     update: [],
     patch: [],
     remove: [],

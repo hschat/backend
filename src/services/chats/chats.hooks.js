@@ -10,7 +10,6 @@ const restrict = [
   }),
 ];
 
-
 /**
  * Helper function for replacing a given user id with its database object
  * @param context The context of the request
@@ -18,9 +17,9 @@ const restrict = [
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function replaceUser(context, id) {
-  const user = await context.app.service('users')
-    .get(id);
-  if (Object.prototype.hasOwnProperty.call(user, 'password')) user.password = undefined;
+  const user = await context.app.service('users').get(id);
+  if (Object.prototype.hasOwnProperty.call(user, 'password'))
+    user.password = undefined;
   return user;
 }
 
@@ -69,54 +68,63 @@ async function checkForDouble(context) {
   if (!Array.isArray(participants)) return undefined;
   // Filter for an existing chat
 
-  return Promise.resolve(ctx.app.service('chats')
-    .find({
-      query: {
-        $or: [
-          { participants },
-        ],
-        type: 'personal',
-      },
-    })
-    .then(async (result) => {
-      logger.debug('DB Query Result: ', result);
+  return Promise.resolve(
+    ctx.app
+      .service('chats')
+      .find({
+        query: {
+          $or: [{ participants }],
+          type: 'personal',
+        },
+      })
+      .then(async result => {
+        logger.debug('DB Query Result: ', result);
 
-      // eslint-disable-next-line no-param-reassign
-      result.data = result.data.filter((chat) => {
-        const p = chat.participants;
-        return p.length === participants.length && p.every((v, i) => v === participants[i]);
-      });
-
-      // eslint-disable-next-line no-param-reassign
-      result.total = result.data.length;
-
-      let chat;
-
-      if (result.total === 0) return ctx;
-
-      if (result.total > 1) {
-        logger.error('User has too many duplicate chats!!');
-        return undefined;
-      }
-      logger.debug('Duplicate chat found');
-      ctx.params.is_double = true;
-
-
-      await Promise.all(result.data.map(async (c) => {
         // eslint-disable-next-line no-param-reassign
-        c.participants = await replaceUsers(ctx, c.participants);
-        chat = c;
-      }));
+        result.data = result.data.filter(chat => {
+          const p = chat.participants;
+          return (
+            p.length === participants.length &&
+            p.every((v, i) => v === participants[i])
+          );
+        });
 
-      ctx.result = chat;
+        // eslint-disable-next-line no-param-reassign
+        result.total = result.data.length;
 
-      logger.info('Skipping service call from ', ctx.method, ' with ', ctx.result);
+        let chat;
 
-      // Nothing found, back to normal
-      return ctx;
-    }));
+        if (result.total === 0) return ctx;
+
+        if (result.total > 1) {
+          logger.error('User has too many duplicate chats!!');
+          return undefined;
+        }
+        logger.debug('Duplicate chat found');
+        ctx.params.is_double = true;
+
+        await Promise.all(
+          result.data.map(async c => {
+            // eslint-disable-next-line no-param-reassign
+            c.participants = await replaceUsers(ctx, c.participants);
+            chat = c;
+          })
+        );
+
+        ctx.result = chat;
+
+        logger.info(
+          'Skipping service call from ',
+          ctx.method,
+          ' with ',
+          ctx.result
+        );
+
+        // Nothing found, back to normal
+        return ctx;
+      })
+  );
 }
-
 
 /**
  * Formatting a chat object before sending to the client
@@ -138,7 +146,12 @@ async function formatChats(context) {
    */
   const ctx = context;
 
-  logger.debug('Returning after ', ctx.method, ' before finished formatting ', ctx.result);
+  logger.debug(
+    'Returning after ',
+    ctx.method,
+    ' before finished formatting ',
+    ctx.result
+  );
 
   if ({}.hasOwnProperty.call(ctx.result, 'data')) {
     ctx.result = ctx.result.data;
@@ -149,13 +162,15 @@ async function formatChats(context) {
     const chats = [];
 
     // Execute the replacement step of users for each element
-    await Promise.all(ctx.result.map(async (chat) => {
-      const c = chat;
-      // Replace the recievers array of the users
-      c.participants = await replaceUsers(ctx, chat.participants);
+    await Promise.all(
+      ctx.result.map(async chat => {
+        const c = chat;
+        // Replace the recievers array of the users
+        c.participants = await replaceUsers(ctx, chat.participants);
 
-      chats.push(c);
-    }));
+        chats.push(c);
+      })
+    );
 
     ctx.result = chats;
     logger.debug('Inside format :', ctx.result);
@@ -174,7 +189,10 @@ async function formatChats(context) {
 // ToDo: Evaluate the necessity of the function below
 // eslint-disable-next-line no-unused-vars
 function sendSystemNotification(context) {
-  if (Object.prototype.hasOwnProperty.call(context.params, 'is_double') && context.params.is_double) {
+  if (
+    Object.prototype.hasOwnProperty.call(context.params, 'is_double') &&
+    context.params.is_double
+  ) {
     // eslint-disable-next-line no-param-reassign
     context.params.is_double = undefined;
     return context;
@@ -192,8 +210,7 @@ function sendSystemNotification(context) {
     system: true,
   };
 
-  context.app.service('messages')
-    .create(msg);
+  context.app.service('messages').create(msg);
   return context;
 }
 
@@ -217,17 +234,19 @@ async function notifyParticipants(context) {
       }
 
       // Emit event with data
-      await context.app.service('chats')
-        .publish(m, async () => {
-          // Search channels for given participant
-          const channel = context.app.channel(context.app.channels)
-            .filter(connection => (chat.participants.indexOf(connection.user.id) !== -1));
+      await context.app.service('chats').publish(m, async () => {
+        // Search channels for given participant
+        const channel = context.app
+          .channel(context.app.channels)
+          .filter(
+            connection => chat.participants.indexOf(connection.user.id) !== -1
+          );
 
-          // If no channel was found return undefined
-          if (channel === undefined) return undefined;
+        // If no channel was found return undefined
+        if (channel === undefined) return undefined;
 
-          return channel;
-        });
+        return channel;
+      });
     }
   }
   return context;
@@ -251,12 +270,7 @@ module.exports = {
   },
 
   after: {
-    all: [
-      hooks.when(
-        hook => hook.params.provider,
-        formatChats,
-      ),
-    ],
+    all: [hooks.when(hook => hook.params.provider, formatChats)],
     find: [],
     get: [],
     create: [

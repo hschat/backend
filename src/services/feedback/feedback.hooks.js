@@ -5,9 +5,10 @@ const logger = require('winston');
 
 function publish(context) {
   logger.debug('Feedback published');
-  context.app.service('feedback').publish('created', () => context.app.channel('authenticated'));
+  context.app
+    .service('feedback')
+    .publish('created', () => context.app.channel('authenticated'));
 }
-
 
 const restrict = [
   authenticate('jwt'),
@@ -17,7 +18,6 @@ const restrict = [
     idField: 'id',
   }),
 ];
-
 
 module.exports = {
   before: {

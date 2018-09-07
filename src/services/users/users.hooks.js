@@ -22,7 +22,6 @@ function setUserFields(context) {
   return c;
 }
 
-
 function sendVerificationEmail(context) {
   const email = {
     from: 'no-reply@hschat.app',
@@ -31,36 +30,45 @@ function sendVerificationEmail(context) {
     html: 'This is the email body',
   };
 
-  context.app.service('email').create(email).then(() => {
-    logger.info(`Sent email to ${email.to}!`);
-  }).catch((err) => {
-    logger.error(err);
-  });
+  context.app
+    .service('email')
+    .create(email)
+    .then(() => {
+      logger.info(`Sent email to ${email.to}!`);
+    })
+    .catch(err => {
+      logger.error(err);
+    });
 
   return context;
 }
-
 
 module.exports = {
   before: {
     all: [],
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [hashPassword(), setUserFields/* verifyHooks.addVerification() */],
+    create: [hashPassword(), setUserFields /* verifyHooks.addVerification() */],
     update: [...restrict, hashPassword(), commonHooks.disallow('external')],
-    patch: [...restrict, hashPassword(), commonHooks.iff(
-      commonHooks.isProvider('external'),
-      commonHooks.preventChanges(true,
-        'email',
-        'isVerified',
-        'verifyToken',
-        'verifyShortToken',
-        'verifyExpires',
-        'verifyChanges',
-        'resetToken',
-        'resetShortToken',
-        'resetExpires'),
-    )],
+    patch: [
+      ...restrict,
+      hashPassword(),
+      commonHooks.iff(
+        commonHooks.isProvider('external'),
+        commonHooks.preventChanges(
+          true,
+          'email',
+          'isVerified',
+          'verifyToken',
+          'verifyShortToken',
+          'verifyExpires',
+          'verifyChanges',
+          'resetToken',
+          'resetShortToken',
+          'resetExpires'
+        )
+      ),
+    ],
     remove: [...restrict],
   },
 
@@ -68,7 +76,7 @@ module.exports = {
     all: [
       commonHooks.when(
         hook => hook.params.provider,
-        commonHooks.discard('password'),
+        commonHooks.discard('password')
       ),
     ],
     find: [],

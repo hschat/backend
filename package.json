@@ -23,7 +23,7 @@
     "eslint": "eslint src/",
     "eslint:watch": "esw -w",
     "start": "node src/",
-    "mocha": "nyc --reporter=lcov mocha test/ --recursive --exit",
+    "mocha": "NODE_ENV=test nyc --reporter=lcov mocha test/",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
@@ -51,18 +51,23 @@
     "winston": "^3.0.0"
   },
   "devDependencies": {
-    "sequelize-cli": "^4.0.0",
     "babel-cli": "^6.26.0",
     "babel-preset-flow": "^6.23.0",
     "coveralls": "^3.0.2",
     "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.0.1",
     "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-prettier": "^2.6.2",
     "eslint-watch": "^4.0.2",
+    "faker": "^4.1.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.4",
     "nyc": "^13.0.1",
+    "prettier": "^1.14.2",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "sequelize-cli": "^4.0.0",
+    "should": "^13.2.3"
   }
 }

@@ -1,5 +1,8 @@
 {
-  "host": "hsc-backend.herokuapp.com",
+  "host": "hschat.app",
   "port": "PORT",
-  "postgres": "DATABASE_URL"
+  "postgres": "DATABASE_URL",
+  "authentication": {
+    "secret": "AUTH_SECRET"
+  }
 }
