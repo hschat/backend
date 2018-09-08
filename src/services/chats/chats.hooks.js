@@ -1,17 +1,13 @@
 const { restrictToOwner } = require('feathers-authentication-hooks');
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const hooksAuth = require('feathers-authentication-hooks');
 const hooks = require('feathers-hooks-common');
 const logger = require('winston');
-const errors = require('@feathersjs/errors');
 
 const restrict = [
   authenticate('jwt'),
   restrictToOwner({
     idField: 'id',
   }),
-  // :TODO https://github.com/feathersjs-ecosystem/feathers-authentication-hooks#queryWithCurrentUser
-  // (context) => {context.params.user_obj = context.params.user; return context;},
 ];
 
 /**
@@ -233,7 +229,7 @@ module.exports = {
       hook => {
         if (hook.type !== 'before') {
           throw new Error(
-            'The \'queryWithCurrentUser\' hook should only be used as a \'before\' hook.'
+            'The queryWithCurrentUser hook should only be used as a before hook.'
           );
         }
 
@@ -242,13 +238,11 @@ module.exports = {
 
         if (!userEntity) {
           if (!hook.params.provider) {
-            //throw new Error('You are not allowed to access this information.');
-             return hook;
+            // throw new Error('You are not allowed to access this information.');
+            return hook;
           }
           throw new Error('There is no current user to associate.');
         }
-
-        console.log('USER ENTITY:', userEntity);
 
         const { id } = userEntity;
 
@@ -258,14 +252,10 @@ module.exports = {
           );
         }
 
-        console.log('ID: ', id);
-
-
+        // eslint-disable-next-line no-param-reassign
         hook.params.query.participants = {
-          '$contains': [id]
+          $contains: [id],
         };
-
-        console.log('HOOOK:', hook.params);
 
         return hook;
       },

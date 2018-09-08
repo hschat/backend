@@ -83,18 +83,14 @@ module.exports = app => {
   });
 
   // Register created event for a chat
-  app.service('chats').publish('created', data => {
-    return app.channel(`chats/${data.id}`);
-  });
+  app
+    .service('chats')
+    .publish('created', data => app.channel(`chats/${data.id}`));
 
-  app.service('messages').publish('created', async data => {
-    console.log(data)
-    // eslint-disable-next-line no-param-reassign
-    //data.sender = await app.service('users').get(data.sender_id);
-    // eslint-disable-next-line no-param-reassign
-    //data.sender_id = undefined;
-    return app.channel(`chats/${data.chat_id}`);
-  });
+  // Resgister created event for messages
+  app
+    .service('messages')
+    .publish('created', async data => app.channel(`chats/${data.chat_id}`));
 
   app.service('chats').hooks({
     after: {

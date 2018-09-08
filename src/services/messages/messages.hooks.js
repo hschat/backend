@@ -8,8 +8,7 @@ const { disallow } = require('feathers-hooks-common');
  * @returns {Promise<*>} Returns a promise of the function progress
  */
 async function replaceUser(context, id) {
-  const user = await context.app.service('users')
-    .get(id);
+  const user = await context.app.service('users').get(id);
   if (Object.prototype.hasOwnProperty.call(user, 'password')) {
     user.password = undefined;
   }
@@ -32,23 +31,11 @@ async function resolveUsers(context) {
     for (const i in Object.keys(ctx.result)) {
       if ({}.hasOwnProperty.call(ctx.result[i], 'sender_id')) {
         // ToDo: Improve execution speed by parallelization (no-await-in-loop)
-        ctx.result[i].sender = await replaceUser(
-          ctx,
-          ctx.result[i].sender_id
-        );
+        ctx.result[i].sender = await replaceUser(ctx, ctx.result[i].sender_id);
         ctx.result[i].sender_id = undefined;
       }
     }
   }
-  return ctx;
-}
-
-// ToDo: Evaluate the necessity of the function below
-// eslint-disable-next-line no-unused-vars
-async function resolveUsersOfCreate(context) {
-  const ctx = context;
-  ctx.data.sender = await replaceUser(ctx, ctx.data.sender_id);
-  ctx.data.sender_id = undefined;
   return ctx;
 }
 
@@ -83,10 +70,9 @@ async function updateChat(context) {
     .patch(context.data.chat_id, { updated_at: Date.now() });
 
   // ToDo: Move into separate function
-  context.result.sender = await replaceUser(
-    context,
-    context.result.sender_id
-  );
+  // eslint-disable-next-line no-param-reassign
+  context.result.sender = await replaceUser(context, context.result.sender_id);
+  // eslint-disable-next-line no-param-reassign
   context.result.sender_id = undefined;
   return context;
 }
