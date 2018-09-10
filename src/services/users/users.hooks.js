@@ -36,7 +36,7 @@ function sendVerificationEmail(context) {
     .then(() => {
       logger.info(`Sent email to ${email.to}!`);
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(err);
     });
 
@@ -48,7 +48,7 @@ module.exports = {
     all: [],
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [hashPassword(), setUserFields /* verifyHooks.addVerification() */],
+    create: [hashPassword(), setUserFields],
     update: [...restrict, hashPassword(), commonHooks.disallow('external')],
     patch: [
       ...restrict,
@@ -65,8 +65,8 @@ module.exports = {
           'verifyChanges',
           'resetToken',
           'resetShortToken',
-          'resetExpires'
-        )
+          'resetExpires',
+        ),
       ),
     ],
     remove: [...restrict],
@@ -76,7 +76,7 @@ module.exports = {
     all: [
       commonHooks.when(
         hook => hook.params.provider,
-        commonHooks.discard('password')
+        commonHooks.discard('password'),
       ),
     ],
     find: [],

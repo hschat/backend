@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 
 const { DataTypes } = Sequelize;
 
-module.exports = app => {
+module.exports = (app) => {
   const sequelizeClient = app.get('sequelizeClient');
   const feedback = sequelizeClient.define(
     'feedback',
@@ -42,11 +42,11 @@ module.exports = app => {
           options.raw = true;
         },
       },
-    }
+    },
   );
 
   // eslint-disable-next-line no-unused-vars
-  feedback.associate = models => {
+  feedback.associate = (models) => {
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
   };

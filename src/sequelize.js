@@ -38,7 +38,7 @@ const operatorsAliases = {
   $col: Op.col,
 };
 
-module.exports = app => {
+module.exports = (app) => {
   const connectionString = app.get('postgres');
   const sequelize = new Sequelize(connectionString, {
     dialect: 'postgres',
@@ -53,12 +53,12 @@ module.exports = app => {
   app.set('sequelizeClient', sequelize);
 
   // eslint-disable-next-line func-names,no-param-reassign
-  app.setup = function(...args) {
+  app.setup = function (...args) {
     const result = oldSetup.apply(this, args);
 
     // Set up data relationships
     const { models } = sequelize;
-    Object.keys(models).forEach(name => {
+    Object.keys(models).forEach((name) => {
       if ('associate' in models[name]) {
         models[name].associate(models);
       }

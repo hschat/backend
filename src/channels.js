@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app) => {
   /**
    * helper function to join a user all the channels he belongs to
    * @param user the user who has to join his channels
@@ -17,7 +17,7 @@ module.exports = app => {
     const chats = await app
       .service('chats')
       .find({ query: { participants: { $contains: [user.id] } } });
-    chats.data.forEach(chat => {
+    chats.data.forEach((chat) => {
       app.channel(`chats/${chat.id}`).join(connection);
     });
   };
@@ -26,10 +26,9 @@ module.exports = app => {
    * kicks a users out of all channels
    * @param user
    */
-  const leaveChannels = user =>
-    app
-      .channel(app.channels)
-      .leave(connection => connection.user.id === user.id);
+  const leaveChannels = user => app
+    .channel(app.channels)
+    .leave(connection => connection.user.id === user.id);
 
   /**
    * helper function if the channel informations of a user chances
@@ -39,7 +38,7 @@ module.exports = app => {
    * ToDo: Evaluate the necessity of the function below
    */
   // eslint-disable-next-line no-unused-vars
-  const updateChannels = async user => {
+  const updateChannels = async (user) => {
     // Find all connections for this user
     const { connections } = app
       .channel(app.channels)
@@ -52,7 +51,7 @@ module.exports = app => {
     await connections.forEach(connection => joinChannels(user, connection));
   };
 
-  app.on('connection', connection => {
+  app.on('connection', (connection) => {
     // On a new real-time connection, add it to the
     // anonymous channel
     app.channel('anonymous').join(connection);
@@ -78,7 +77,7 @@ module.exports = app => {
   });
 
   // When a user is removed, make all their connections leave every channel
-  app.service('users').on('removed', user => {
+  app.service('users').on('removed', (user) => {
     leaveChannels(user);
   });
 
@@ -97,7 +96,7 @@ module.exports = app => {
       async create(context) {
         const { result } = context;
         const participantIds = result.participants.map(
-          participant => participant.id
+          participant => participant.id,
         );
         const { connections } = app
           .channel(app.channels)

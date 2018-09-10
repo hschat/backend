@@ -78,15 +78,15 @@ async function checkForDouble(context) {
           type: 'personal',
         },
       })
-      .then(async result => {
+      .then(async (result) => {
         logger.debug('DB Query Result: ', result);
 
         // eslint-disable-next-line no-param-reassign
-        result.data = result.data.filter(chat => {
+        result.data = result.data.filter((chat) => {
           const p = chat.participants;
           return (
-            p.length === participants.length &&
-            p.every((v, i) => v === participants[i])
+            p.length === participants.length
+            && p.every((v, i) => v === participants[i])
           );
         });
 
@@ -105,11 +105,11 @@ async function checkForDouble(context) {
         ctx.params.is_double = true;
 
         await Promise.all(
-          result.data.map(async c => {
+          result.data.map(async (c) => {
             // eslint-disable-next-line no-param-reassign
             c.participants = await replaceUsers(ctx, c.participants);
             chat = c;
-          })
+          }),
         );
 
         ctx.result = chat;
@@ -118,12 +118,12 @@ async function checkForDouble(context) {
           'Skipping service call from ',
           ctx.method,
           ' with ',
-          ctx.result
+          ctx.result,
         );
 
         // Nothing found, back to normal
         return ctx;
-      })
+      }),
   );
 }
 
@@ -151,7 +151,7 @@ async function formatChats(context) {
     'Returning after ',
     ctx.method,
     ' before finished formatting ',
-    ctx.result
+    ctx.result,
   );
 
   if ({}.hasOwnProperty.call(ctx.result, 'data')) {
@@ -164,13 +164,13 @@ async function formatChats(context) {
 
     // Execute the replacement step of users for each element
     await Promise.all(
-      ctx.result.map(async chat => {
+      ctx.result.map(async (chat) => {
         const c = chat;
         // Replace the recievers array of the users
         c.participants = await replaceUsers(ctx, chat.participants);
 
         chats.push(c);
-      })
+      }),
     );
 
     ctx.result = chats;
@@ -191,8 +191,8 @@ async function formatChats(context) {
 // eslint-disable-next-line no-unused-vars
 function sendSystemNotification(context) {
   if (
-    Object.prototype.hasOwnProperty.call(context.params, 'is_double') &&
-    context.params.is_double
+    Object.prototype.hasOwnProperty.call(context.params, 'is_double')
+    && context.params.is_double
   ) {
     // eslint-disable-next-line no-param-reassign
     context.params.is_double = undefined;
@@ -226,10 +226,10 @@ module.exports = {
     all: [authenticate('jwt')],
     find: [
       authenticate('jwt'),
-      hook => {
+      (hook) => {
         if (hook.type !== 'before') {
           throw new Error(
-            'The queryWithCurrentUser hook should only be used as a before hook.'
+            'The queryWithCurrentUser hook should only be used as a before hook.',
           );
         }
 
@@ -248,7 +248,7 @@ module.exports = {
 
         if (id === undefined) {
           throw new Error(
-            `Current user is missing '${options.idField}' field.`
+            `Current user is missing '${options.idField}' field.`,
           );
         }
 

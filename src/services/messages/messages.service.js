@@ -2,7 +2,7 @@ const createService = require('feathers-sequelize');
 const createModel = require('../../models/messages.model');
 const hooks = require('./messages.hooks');
 
-module.exports = app => {
+module.exports = (app) => {
   const Model = createModel(app);
   const paginate = app.get('paginate');
 

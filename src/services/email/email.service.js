@@ -1,7 +1,7 @@
 const mailer = require('feathers-mailer');
 const hooks = require('./email.hooks');
 
-module.exports = app => {
+module.exports = (app) => {
   const options = {
     port: 587,
     host: 'in-v3.mailjet.com',

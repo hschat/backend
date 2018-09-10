@@ -4,7 +4,7 @@ const chats = require('./chats/chats.service.js');
 const feedback = require('./feedback/feedback.service.js');
 const email = require('./email/email.service.js');
 
-module.exports = app => {
+module.exports = (app) => {
   app.configure(users);
   app.configure(messages);
   app.configure(chats);
