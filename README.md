@@ -46,14 +46,13 @@ brew install node@8 yarn postgresql
 ## Setup
 
 ```bash
+# Change into the direcotry of the project
 yarn install
 
 # On Windows
 sudo -u postgres createdb -O postgres hschat
 # On macOS
 createdb -O postgres hschat
-
-# Change into the direcotry of the project
 
 node_modules/.bin/sequelize db:migrate
 node_modules/.bin/sequelize db:seed:all
