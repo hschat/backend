@@ -46,6 +46,7 @@ brew install node@8 yarn postgresql
 ## Setup
 
 ```bash
+# Change into the direcotry of the project
 yarn install
 
 # On Windows
