@@ -4,7 +4,7 @@
 
 ## Requirements
 
-### Linux
+### Windows (Linux subsystem)
 
 ```bash
 # Install yarn
