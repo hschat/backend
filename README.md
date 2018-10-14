@@ -1,57 +1,68 @@
 # chat-backend
 
-[![Build Status](https://travis-ci.org/smarthome-lab/chat-backend.svg?branch=master)](https://travis-ci.org/smarthome-lab/chat-backend)   [![Maintainability](https://api.codeclimate.com/v1/badges/0ac623551e828a20e367/maintainability)](https://codeclimate.com/github/smarthome-lab/chat-backend/maintainability)   [![Test Coverage](https://api.codeclimate.com/v1/badges/0ac623551e828a20e367/test_coverage)](https://codeclimate.com/github/smarthome-lab/chat-backend/test_coverage)   [![Coverage Status](https://coveralls.io/repos/github/smarthome-lab/chat-backend/badge.svg?branch=enable-coveralls)](https://coveralls.io/github/smarthome-lab/chat-backend?branch=enable-coveralls)
+[![Build Status](https://travis-ci.org/smarthome-lab/chat-backend.svg?branch=master)](https://travis-ci.org/smarthome-lab/chat-backend)   [![Maintainability](https://api.codeclimate.com/v1/badges/0ac623551e828a20e367/maintainability)](https://codeclimate.com/github/hschat/backend/maintainability)   [![Test Coverage](https://api.codeclimate.com/v1/badges/0ac623551e828a20e367/test_coverage)](https://codeclimate.com/github/hschat/backend/test_coverage) 
 
-## About
+## Requirements
 
-This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
+### Windows (Linux subsystem)
 
-## Getting Started
+```bash
+# Install yarn
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update && sudo apt-get install yarn
 
-Getting up and running is as easy as 1, 2, 3.
+# Install node
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs build-essential
 
-1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
-2. Install your dependencies
-
-    ```
-    cd path/to/backend; npm install
-    ```
-
-3. Start your app
-
-    ```
-    npm start
-    ```
-
-## Testing
-
-Simply run `npm test` and all your tests in the `test/` directory will be run.
-
-## Scaffolding
-
-Feathers has a powerful command line interface. Here are a few things it can do:
-
-```
-$ npm install -g feathers-cli             # Install Feathers CLI
-
-$ feathers generate service               # Generate a new Service
-$ feathers generate hook                  # Generate a new Hook
-$ feathers generate model                 # Generate a new Model
-$ feathers help                           # Show all commands
+# Install postgresql
+sudo apt-get install -y postgresql postgresql-client
+sudo vim /etc/postgresql/9.5/main/pg_hba.conf
+#
+# Find the following line 
+#
+#   host    all             all             127.0.0.1/32            md5
+#
+# and add the following above it:
+#
+#   host    all             postgres        127.0.0.1/32            trust
+#
+sudo service postgresql start 
 ```
 
-## Help
+### macOS
 
-For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+```bash
+# For homebrew
+brew install node@8 yarn postgresql
 
-## Changelog
+# else check 
+# - https://nodejs.org/en/
+# - https://yarnpkg.com/en/docs/install
+# - https://www.postgresql.org/
+```
 
-__0.1.0__
+## Setup
 
-- Initial release
+```bash
+# Change into the direcotry of the project
+yarn install
 
-## License
+# On Windows
+sudo -u postgres createdb -O postgres hschat
+# On macOS
+createdb -O postgres hschat
 
-Copyright (c) 2016
+node_modules/.bin/sequelize db:migrate
+node_modules/.bin/sequelize db:seed:all
+```
 
-Licensed under the [MIT license](LICENSE).
+## Running it
+
+```
+yarn start
+# Access it at localhost:3030
+```
+
+
