@@ -1,6 +1,6 @@
 # chat-backend
 
-[![Build Status](https://travis-ci.org/smarthome-lab/chat-backend.svg?branch=master)](https://travis-ci.org/smarthome-lab/chat-backend)   [![Maintainability](https://api.codeclimate.com/v1/badges/0ac623551e828a20e367/maintainability)](https://codeclimate.com/github/hschat/backend/maintainability)   [![Test Coverage](https://api.codeclimate.com/v1/badges/0ac623551e828a20e367/test_coverage)](https://codeclimate.com/github/hschat/backend/test_coverage) 
+[![Build Status](https://travis-ci.org/hschat/backend.svg?branch=master)](https://travis-ci.org/hschat/backend)    [![Maintainability](https://api.codeclimate.com/v1/badges/47852681ba3b4702a364/maintainability)](https://codeclimate.com/github/hschat/backend/maintainability)   [![Test Coverage](https://api.codeclimate.com/v1/badges/47852681ba3b4702a364/test_coverage)](https://codeclimate.com/github/hschat/backend/test_coverage) 
 
 ## Requirements
 
