@@ -1,0 +1,6 @@
+--require should
+--reporter list
+--ui bdd
+--recursive
+
+test/**/*.test.js
