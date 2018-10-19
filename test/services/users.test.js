@@ -20,7 +20,7 @@ describe('\'users\' service', () => {
         password: faker.internet.password(),
       });
 
-      //console.log(service);
+      // console.log(service);
       assert.ok(true, false);
     });
 
@@ -28,5 +28,4 @@ describe('\'users\' service', () => {
 
     });
   });
-
 });

@@ -19,7 +19,7 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "test": "yarn run eslint && yarn run mocha",
+    "test": "yarn run eslint && yarn run mocha && yarn run eslint",
     "eslint": "eslint src/",
     "eslint:watch": "esw -w",
     "start": "node src/",
