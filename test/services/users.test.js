@@ -12,14 +12,12 @@ describe('\'users\' service', () => {
     it('should succeed with valid user data', () => {
       const service = app.service('users');
 
-      const fName = faker.name.firstName();
-      const lName = faker.name.lastName();
-      const hsid = '';
-
       service.create({
         prename: faker.name.firstName(),
         lastname: faker.name.lastName(),
         email: faker.internet.email(),
+        hsid: 'test1234',
+        password: faker.internet.password(),
       });
 
       //console.log(service);
