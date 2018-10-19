@@ -41,6 +41,7 @@
     "feathers-authentication-management": "^2.0.1",
     "feathers-hooks-common": "git://github.com/feathers-plus/feathers-hooks-common.git#master",
     "feathers-mailer": "^3.0.1",
+    "feathers-permissions": "^0.2.1",
     "feathers-sequelize": "^3.1.2",
     "global": "^4.3.2",
     "helmet": "^3.14.0",
