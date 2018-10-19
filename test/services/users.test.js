@@ -14,7 +14,7 @@ describe('\'users\' service', () => {
 
       const fName = faker.name.firstName();
       const lName = faker.name.lastName();
-      const hsid
+      const hsid = '';
 
       service.create({
         prename: faker.name.firstName(),
