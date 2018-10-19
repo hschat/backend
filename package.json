@@ -20,7 +20,7 @@
   },
   "scripts": {
     "test": "yarn run eslint && yarn run mocha",
-    "eslint": "eslint src/",
+    "eslint": "eslint .",
     "eslint:watch": "esw -w",
     "start": "node src/",
     "mocha": "NODE_ENV=test nyc --reporter=lcov mocha test/ --exit",
