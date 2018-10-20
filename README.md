@@ -18,7 +18,7 @@ sudo apt-get install -y nodejs build-essential
 
 # Install postgresql
 sudo apt-get install -y postgresql postgresql-client
-sudo vim /etc/postgresql/9.5/main/pg_hba.conf
+sudo vim /etc/postgresql/<YOUR VERSION>/main/pg_hba.conf
 #
 # Find the following line 
 #
