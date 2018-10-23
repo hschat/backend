@@ -27,9 +27,13 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
     "@feathersjs/authentication": "^2.1.11",
     "@feathersjs/authentication-jwt": "^2.0.5",
     "@feathersjs/authentication-local": "^1.2.5",
+    "@feathersjs/cli": "^3.8.6",
     "@feathersjs/configuration": "^2.0.4",
     "@feathersjs/errors": "^3.3.4",
     "@feathersjs/express": "^1.2.7",
@@ -37,6 +41,7 @@
     "@feathersjs/socketio": "^3.2.6",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
+    "expo-cli": "^2.2.0",
     "feathers-authentication-hooks": "^0.3.1",
     "feathers-authentication-management": "^2.0.1",
     "feathers-hooks-common": "git://github.com/feathers-plus/feathers-hooks-common.git#master",
@@ -52,7 +57,6 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
     "babel-preset-flow": "^6.23.0",
     "eslint": "^5.7.0",
     "eslint-config-airbnb-base": "^13.1.0",
