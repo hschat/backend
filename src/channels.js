@@ -7,6 +7,7 @@ module.exports = (app) => {
   const joinChannels = async (user, connection) => {
     // Add it to the authenticated user channel
     app.channel('authenticated').join(connection);
+    
 
     // Join admin channel
     if (user.role === 'admin') {
