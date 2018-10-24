@@ -7,7 +7,7 @@ module.exports = (app) => {
   const joinChannels = async (user, connection) => {
     // Add it to the authenticated user channel
     app.channel('authenticated').join(connection);
-    
+
 
     // Join admin channel
     if (user.role === 'admin') {
@@ -20,6 +20,19 @@ module.exports = (app) => {
       .find({ query: { participants: { $contains: [user.id] } } });
     chats.data.forEach((chat) => {
       app.channel(`chats/${chat.id}`).join(connection);
+
+      // Send Online to all participants in this chat
+      const msg = {
+        text: `User online: ${user.id}`,
+        sender_id: user.id,
+        chat_id: chat.id,
+        send_date: Date.now(),
+        recieve_date: undefined,
+        read_date: undefined,
+        system: false,
+      };
+
+      app.service('messages').create(msg);
     });
   };
 
@@ -27,9 +40,31 @@ module.exports = (app) => {
    * kicks a users out of all channels
    * @param user
    */
-  const leaveChannels = user => app
-    .channel(app.channels)
-    .leave(connection => connection.user.id === user.id);
+  const leaveChannels = (user) => {
+    // find all chats for the user
+    const chats = app
+      .service('chats')
+      .find({ query: { participants: { $contains: [user.id] } } });
+
+    // Send Offline to all participants in this chat
+    chats.data.forEach((chat) => {
+      const msg = {
+        text: `User offline: ${user.id}`,
+        sender_id: user.id,
+        chat_id: chat.id,
+        send_date: Date.now(),
+        recieve_date: undefined,
+        read_date: undefined,
+        system: false,
+      };
+
+      app.service('messages').create(msg);
+    });
+
+    // Leave all channels
+    app.channel(app.channels)
+      .leave(connection => connection.user.id === user.id);
+  };
 
   /**
    * helper function if the channel informations of a user chances
