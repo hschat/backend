@@ -6115,6 +6115,11 @@ nocache@2.0.0:
   resolved "https://registry.yarnpkg.com/nocache/-/nocache-2.0.0.tgz#202b48021a0c4cbde2df80de15a17443c8b43980"
   integrity sha1-ICtIAhoMTL3i34DeFaF0Q8i0OYA=
 
+node-bin-setup@^1.0.0:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/node-bin-setup/-/node-bin-setup-1.0.6.tgz#4b5c9bb937ece702d7069b36ca78af4684677528"
+  integrity sha512-uPIxXNis1CRbv1DwqAxkgBk5NFV3s7cMN/Gf556jSw6jBvV7ca4F9lRL/8cALcZecRibeqU+5dFYqFFmzv5a0Q==
+
 node-dir@0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/node-dir/-/node-dir-0.1.8.tgz#55fb8deb699070707fb67f91a460f0448294c77d"
@@ -6154,6 +6159,13 @@ node-releases@^1.0.0-alpha.14:
   integrity sha512-G8nnF9cP9QPP/jUmYWw/uUUhumHmkm+X/EarCugYFjYm2uXRMFeOD6CVT3RLdoyCvDUNy51nirGfUItKWs/S1g==
   dependencies:
     semver "^5.3.0"
+
+node@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/node/-/node-11.0.0.tgz#20aff1b49ec65717b1603d6d90bbb61e0cfd0b7e"
+  integrity sha512-dD98lA8LETGcjwDEQ3/g2VaB0YaWZmPoDrKZFt7NJU4t24bbqy/apZ+5MZ6dfyCoy3Lwx80k+0Fq9glj+LEzkw==
+  dependencies:
+    node-bin-setup "^1.0.0"
 
 nodemailer@^4.4.2:
   version "4.6.8"
