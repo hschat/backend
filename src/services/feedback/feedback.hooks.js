@@ -1,5 +1,5 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const { restrictToRoles } = require('feathers-authentication-hooks');
+const checkpermissions = require('feathers-permissions');
 
 const logger = require('winston');
 
@@ -12,10 +12,9 @@ function publish(context) {
 
 const restrict = [
   authenticate('jwt'),
-  restrictToRoles({
+  checkpermissions({
     roles: ['admin', 'moderator'],
-    fieldName: 'role',
-    idField: 'id',
+    field: 'role',
   }),
 ];
 
