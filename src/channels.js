@@ -22,6 +22,8 @@ module.exports = (app) => {
       app.channel(`chats/${chat.id}`).join(connection);
 
       // Send Online to all participants in this chat
+      // TODO: Not create, but emit event 
+      /*
       const msg = {
         text: `User online: ${user.id}`,
         sender_id: user.id,
@@ -32,7 +34,7 @@ module.exports = (app) => {
         system: false,
       };
 
-      app.service('messages').create(msg);
+      app.service('messages').create(msg);*/
     });
   };
 
@@ -41,12 +43,16 @@ module.exports = (app) => {
    * @param user
    */
   const leaveChannels = (user) => {
+    
+    // Send Offline to all participants in this chat
+    // TODO: Not create, but emit event 
+      /*
     // find all chats for the user
     const chats = app
       .service('chats')
       .find({ query: { participants: { $contains: [user.id] } } });
 
-    // Send Offline to all participants in this chat
+    
     chats.data.forEach((chat) => {
       const msg = {
         text: `User offline: ${user.id}`,
@@ -59,7 +65,7 @@ module.exports = (app) => {
       };
 
       app.service('messages').create(msg);
-    });
+    });*/
 
     // Leave all channels
     app.channel(app.channels)
@@ -125,6 +131,11 @@ module.exports = (app) => {
   // Resgister created event for messages
   app
     .service('messages')
+    .publish('created', async data => app.channel(`chats/${data.chat_id}`));
+
+  // Register created event for typing
+  app
+    .service('typing')
     .publish('created', async data => app.channel(`chats/${data.chat_id}`));
 
   app.service('chats').hooks({
