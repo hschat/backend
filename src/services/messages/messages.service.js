@@ -8,7 +8,7 @@ module.exports = (app) => {
 
   const options = {
     Model,
-    paginate
+    paginate,
   };
 
   // Initialize our service with any options it requires

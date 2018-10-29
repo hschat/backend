@@ -22,7 +22,7 @@ module.exports = (app) => {
       app.channel(`chats/${chat.id}`).join(connection);
 
       // Send Online to all participants in this chat
-      // TODO: Not create, but emit event 
+      // TODO: Not create, but emit event
       /*
       const msg = {
         text: `User online: ${user.id}`,
@@ -34,7 +34,8 @@ module.exports = (app) => {
         system: false,
       };
 
-      app.service('messages').create(msg);*/
+      app.service('messages').create(msg);
+      */
     });
   };
 
@@ -43,16 +44,15 @@ module.exports = (app) => {
    * @param user
    */
   const leaveChannels = (user) => {
-    
     // Send Offline to all participants in this chat
-    // TODO: Not create, but emit event 
-      /*
+    // TODO: Not create, but emit event
+    /*
     // find all chats for the user
     const chats = app
       .service('chats')
       .find({ query: { participants: { $contains: [user.id] } } });
 
-    
+
     chats.data.forEach((chat) => {
       const msg = {
         text: `User offline: ${user.id}`,
@@ -65,7 +65,8 @@ module.exports = (app) => {
       };
 
       app.service('messages').create(msg);
-    });*/
+    });
+    */
 
     // Leave all channels
     app.channel(app.channels)

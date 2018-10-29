@@ -27,7 +27,7 @@ module.exports = {
     );
   },
 
-  down: (queryInterface, DataTypes) => {
+  down: (queryInterface) => {
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
