@@ -56,7 +56,8 @@
     "sequelize": "^4.40.0",
     "serve-favicon": "^2.5.0",
     "snyk": "^1.105.0",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "sequelize-cli": "^5.1.0"
   },
   "devDependencies": {
     "babel-preset-flow": "^6.23.0",
@@ -70,7 +71,6 @@
     "nyc": "^13.1.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "sequelize-cli": "^5.1.0",
     "should": "^13.2.3"
   }
 }
