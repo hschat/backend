@@ -83,7 +83,8 @@ module.exports = (app) => {
       },
       isOnline: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        allowNull: false,
+        defaultValue: false,
       },
     },
     {
