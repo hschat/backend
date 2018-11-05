@@ -42,6 +42,10 @@ module.exports = {
       type: DataTypes.FLOAT,
       allowNull: true,
     },
+    location_is_allowed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
     location_in_hs: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
