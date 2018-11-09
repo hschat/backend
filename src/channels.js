@@ -20,22 +20,6 @@ module.exports = (app) => {
       .find({ query: { participants: { $contains: [user.id] } } });
     chats.data.forEach((chat) => {
       app.channel(`chats/${chat.id}`).join(connection);
-
-      // Send Online to all participants in this chat
-      // TODO: Not create, but emit event
-      /*
-      const msg = {
-        text: `User online: ${user.id}`,
-        sender_id: user.id,
-        chat_id: chat.id,
-        send_date: Date.now(),
-        recieve_date: undefined,
-        read_date: undefined,
-        system: false,
-      };
-
-      app.service('messages').create(msg);
-      */
     });
   };
 
@@ -44,30 +28,6 @@ module.exports = (app) => {
    * @param user
    */
   const leaveChannels = (user) => {
-    // Send Offline to all participants in this chat
-    // TODO: Not create, but emit event
-    /*
-    // find all chats for the user
-    const chats = app
-      .service('chats')
-      .find({ query: { participants: { $contains: [user.id] } } });
-
-
-    chats.data.forEach((chat) => {
-      const msg = {
-        text: `User offline: ${user.id}`,
-        sender_id: user.id,
-        chat_id: chat.id,
-        send_date: Date.now(),
-        recieve_date: undefined,
-        read_date: undefined,
-        system: false,
-      };
-
-      app.service('messages').create(msg);
-    });
-    */
-
     // Leave all channels
     app.channel(app.channels)
       .leave(connection => connection.user.id === user.id);
