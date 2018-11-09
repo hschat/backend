@@ -8,6 +8,7 @@ module.exports = (app) => {
     // Add it to the authenticated user channel
     app.channel('authenticated').join(connection);
 
+
     // Join admin channel
     if (user.role === 'admin') {
       app.channel('admins').join(connection);
@@ -26,9 +27,11 @@ module.exports = (app) => {
    * kicks a users out of all channels
    * @param user
    */
-  const leaveChannels = user => app
-    .channel(app.channels)
-    .leave(connection => connection.user.id === user.id);
+  const leaveChannels = (user) => {
+    // Leave all channels
+    app.channel(app.channels)
+      .leave(connection => connection.user.id === user.id);
+  };
 
   /**
    * helper function if the channel informations of a user chances
@@ -89,6 +92,11 @@ module.exports = (app) => {
   // Resgister created event for messages
   app
     .service('messages')
+    .publish('created', async data => app.channel(`chats/${data.chat_id}`));
+
+  // Register created event for typing
+  app
+    .service('typing')
     .publish('created', async data => app.channel(`chats/${data.chat_id}`));
 
   app.service('chats').hooks({
