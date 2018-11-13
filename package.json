@@ -15,7 +15,11 @@
     "test": "test/"
   },
   "engines": {
+<<<<<<< HEAD
     "node": ">=10.12.0 <12.0.0",
+=======
+    "node": "11.1.0",
+>>>>>>> Fixed some lint issues
     "yarn": ">= 0.18.0"
   },
   "scripts": {
