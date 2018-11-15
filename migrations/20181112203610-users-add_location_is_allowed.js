@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
     /*
@@ -9,17 +7,16 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-   queryInterface.addColumn(
-     'users',
-     'location_is_allowed',
-     {
-      type: Sequelize.BOOLEAN,
-      allowNull: true,
-     },
-   );
+    queryInterface.addColumn(
+      'users',
+      'location_is_allowed', {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+      },
+    );
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
@@ -27,6 +24,6 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-   queryInterface.removeColumn('users', 'location_is_allowed');
-  }
+    queryInterface.removeColumn('users', 'location_is_allowed');
+  },
 };
