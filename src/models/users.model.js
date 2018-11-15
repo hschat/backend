@@ -86,6 +86,10 @@ module.exports = (app) => {
         allowNull: false,
         defaultValue: false,
       },
+      location_is_allowed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
     },
     {
       hooks: {
