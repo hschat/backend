@@ -18,7 +18,7 @@ sudo apt-get install -y nodejs build-essential
 
 # Install postgresql
 sudo apt-get install -y postgresql postgresql-client
-sudo vim /etc/postgresql/9.5/main/pg_hba.conf
+sudo vim /etc/postgresql/<YOUR VERSION>/main/pg_hba.conf
 #
 # Find the following line 
 #
@@ -64,5 +64,55 @@ node_modules/.bin/sequelize db:seed:all
 yarn start
 # Access it at localhost:3030
 ```
+
+## Troubleshooting
+### The Node Version is incompatible
+```
+The engine "node" is incompatible with this module. Expected version "^8.0.0". Got "10.12.0"
+```
+Solution: Navigate to the package.json and change the value "8.0.0" to "10.12.0"
+
+### Postgres role error
+```
+could not connect to database postgres: FATAL: role "******" does not exist
+```
+Solution: run the following commands
+```
+sudo -u postgres -i
+createdb -O postgres hschat
+```
+
+### Postgres connect error
+```
+createdb: could not connect to database template1: could not connect to server: No such file or directory
+```
+Solution macOs: 
+```
+brew services start postgresql
+```
+Solution linux:
+```
+service postgresql start
+```
+
+
+### Postgres authentification error
+You missed the pg_hba.conf step
+
+### Yarn does not install on Ubuntu
+Solution: run the following commands
+```
+apt-get purge yarn
+apt-get purge cmdtest
+apt-get autoclean
+apt-get update
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update && sudo apt-get install yarn
+```
+
+
+
+
 
 

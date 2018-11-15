@@ -77,6 +77,19 @@ module.exports = (app) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      last_time_online: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      isOnline: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      location_is_allowed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
     },
     {
       hooks: {

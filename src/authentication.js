@@ -8,6 +8,7 @@ module.exports = (app) => {
   // Set up authentication with the secret
   app.configure(authentication(config));
   app.configure(jwt());
+  app.configure(local(config.localhsid));
   app.configure(local());
 
   /*

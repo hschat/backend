@@ -3,19 +3,19 @@ const rp = require('request-promise');
 const app = require('../src/app');
 
 describe('Feathers application tests', () => {
-  before(function (done) {
+  before((done) => {
     this.server = app.listen(3030);
     this.server.once('listening', () => done());
   });
 
-  after(function (done) {
+  after((done) => {
     this.server.close(done);
   });
 
   it('starts and shows the index page', () => {
     rp('http://localhost:3030').then((body) => {
-      assert.ok(body.indexOf('<html') !== -1)
-    })
+      assert.ok(body.indexOf('<html') !== -1);
+    });
   });
 
   describe('404', () => {
