@@ -54,10 +54,6 @@ module.exports = (app) => {
         type: DataTypes.BOOLEAN,
         allowNull: true,
       },
-      location_is_allowed: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-      },
       location_check_time: {
         type: DataTypes.DATE,
         allowNull: true,
@@ -89,6 +85,10 @@ module.exports = (app) => {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
+      },
+      location_is_allowed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
       },
     },
     {
