@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 module.exports = {
-  up: (queryInterface, DataTypes) => queryInterface.createTable('chats', {
+  up: (queryInterface, DataTypes) => queryInterface.createTable('messages', {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
