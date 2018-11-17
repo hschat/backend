@@ -35,8 +35,8 @@
       "entity": "user",
       "service":"users",
       "usernameField": "hsid",
-      "passwordField": "password"  
+      "passwordField": "password"
     }
   },
-  "postgres": "postgres://Oli:@localhost:5432/hschat"
+  "postgres": "postgres://postgres:@localhost:5432/hschat"
 }
