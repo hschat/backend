@@ -1,17 +1,16 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const commonHooks = require('feathers-hooks-common');
-const { restrictToOwner } = require('feathers-authentication-hooks');
-
 const { hashPassword } = require('@feathersjs/authentication-local').hooks;
-
 const logger = require('winston');
 
 const restrict = [
   authenticate('jwt'),
-  restrictToOwner({
-    idField: 'id',
-    ownerField: 'id',
-  }),
+  (context) => { // Restricts to Admins only
+    if (context.params.user.role === 'admin') {
+      return undefined;
+    }
+    throw new Error('Only Admin Users are allowed to do this');
+  },
 ];
 
 function setUserFields(context) {
@@ -49,25 +48,10 @@ module.exports = {
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
     create: [hashPassword(), setUserFields],
-    update: [...restrict, hashPassword(), commonHooks.disallow('external')],
+    update: [...restrict, hashPassword()],
     patch: [
       ...restrict,
       hashPassword(),
-      commonHooks.iff(
-        commonHooks.isProvider('external'),
-        commonHooks.preventChanges(
-          true,
-          'email',
-          'isVerified',
-          'verifyToken',
-          'verifyShortToken',
-          'verifyExpires',
-          'verifyChanges',
-          'resetToken',
-          'resetShortToken',
-          'resetExpires',
-        ),
-      ),
     ],
     remove: [...restrict],
   },
