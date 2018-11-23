@@ -18,7 +18,7 @@ describe('group chat with admins creation', () => {
     myAdmins.push(faker.fake('{{random.uuid}}'));
     myAdmins.push(faker.fake('{{random.uuid}}'));
 
-    await service.create({
+    const group = await service.create({
       type: 'group',
       description: 'test-group-with-admins',
       name: 'test-group-with-admins',
@@ -26,8 +26,7 @@ describe('group chat with admins creation', () => {
       admins: myAdmins,
     });
 
-    assert.ok(service);
-    assert.ok(true, 'Error occured in the group chat with admins creation');
+    assert.ok(group !== undefined, 'Error group not created');
   });
 });
 
@@ -39,7 +38,7 @@ describe('selfmanaged group chat with admins creation', () => {
     myAdmins.push(faker.fake('{{random.uuid}}'));
     myAdmins.push(faker.fake('{{random.uuid}}'));
 
-    await service.create({
+    const group = await service.create({
       type: 'group',
       description: 'test-group-with-admins-and-selfmanaged',
       name: 'test-group-with-admins',
@@ -50,7 +49,6 @@ describe('selfmanaged group chat with admins creation', () => {
       selfmanaged_invitation_link: 'https://hschat.app/groups/join/test-group-with-admins',
     });
 
-    assert.ok(service);
-    assert.ok(true, 'Error occured in the group chat with admins creation');
+    assert.ok(group !== undefined, 'Error group not created');
   });
 });
