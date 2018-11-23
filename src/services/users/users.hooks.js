@@ -1,16 +1,25 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
+const feathers = require('@feathersjs/feathers');
 const commonHooks = require('feathers-hooks-common');
 const { hashPassword } = require('@feathersjs/authentication-local').hooks;
+const { restrictToOwner } = require('feathers-authentication-hooks');
 const logger = require('winston');
 
 const restrict = [
   authenticate('jwt'),
   (context) => { // Restricts to Admins only
-    if (context.params.user.role === 'admin') {
-      return undefined;
+    if (!context.params.user) {
+      return undefined; // If User is not Admin, allow self update
     }
-    throw new Error('Only Admin Users are allowed to do this');
+    if (context.params.user.role === 'admin') {
+      return feathers.SKIP;
+    }
+    return undefined;
   },
+  restrictToOwner({
+    idField: 'id',
+    ownerField: 'id',
+  }),
 ];
 
 function setUserFields(context) {
