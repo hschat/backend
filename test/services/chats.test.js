@@ -11,14 +11,14 @@ describe('\'chats\' service', () => {
 });
 
 describe('group chat with admins creation', () => {
-  it('should succeed with valid group chat with admins creation', () => {
+  it('should succeed with valid group chat with admins creation', async () => {
     const service = app.service('chats');
 
     const myAdmins = [];
     myAdmins.push(faker.fake('{{random.uuid}}'));
     myAdmins.push(faker.fake('{{random.uuid}}'));
 
-    service.create({
+    await service.create({
       type: 'group',
       description: 'test-group-with-admins',
       name: 'test-group-with-admins',
@@ -32,14 +32,14 @@ describe('group chat with admins creation', () => {
 });
 
 describe('selfmanaged group chat with admins creation', () => {
-  it('should succeed with valid selfmanaged group chat with admins creation', () => {
+  it('should succeed with valid selfmanaged group chat with admins creation', async () => {
     const service = app.service('chats');
 
     const myAdmins = [];
     myAdmins.push(faker.fake('{{random.uuid}}'));
     myAdmins.push(faker.fake('{{random.uuid}}'));
 
-    service.create({
+    await service.create({
       type: 'group',
       description: 'test-group-with-admins-and-selfmanaged',
       name: 'test-group-with-admins',
