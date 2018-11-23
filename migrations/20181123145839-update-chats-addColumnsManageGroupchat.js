@@ -8,7 +8,7 @@ module.exports = {
     */
     queryInterface.addColumn(
       'chats',
-      'group_admins',
+      'admins',
       {
         type: DataTypes.ARRAY(DataTypes.UUID),
         allowNull: true,
@@ -16,7 +16,7 @@ module.exports = {
     );
     queryInterface.addColumn(
       'chats',
-      'group_description',
+      'description',
       {
         type: DataTypes.TEXT,
         allowNull: true,
@@ -24,7 +24,7 @@ module.exports = {
     );
     queryInterface.addColumn(
       'chats',
-      'group_is_selfmanaged',
+      'is_selfmanaged',
       {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -33,7 +33,7 @@ module.exports = {
     );
     queryInterface.addColumn(
       'chats',
-      'group_selfmanaged_password',
+      'selfmanaged_password',
       {
         type: DataTypes.TEXT,
         allowNull: true,
@@ -41,7 +41,7 @@ module.exports = {
     );
     queryInterface.addColumn(
       'chats',
-      'group_selfmanaged_invitation_link',
+      'selfmanaged_invitation_link',
       {
         type: DataTypes.TEXT,
         allowNull: true,
@@ -55,10 +55,10 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-    queryInterface.removeColumn('chats', 'group_admins');
-    queryInterface.removeColumn('chats', 'group_description');
-    queryInterface.removeColumn('chats', 'group_is_selfmanaged');
-    queryInterface.removeColumn('chats', 'group_selfmanaged_password');
-    queryInterface.removeColumn('chats', 'group_selfmanaged_invitation_link');
+    queryInterface.removeColumn('chats', 'admins');
+    queryInterface.removeColumn('chats', 'description');
+    queryInterface.removeColumn('chats', 'is_selfmanaged');
+    queryInterface.removeColumn('chats', 'selfmanaged_password');
+    queryInterface.removeColumn('chats', 'selfmanaged_invitation_link');
   },
 };
