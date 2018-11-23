@@ -34,6 +34,27 @@ module.exports = (app) => {
       name: {
         type: DataTypes.STRING,
       },
+      admins: {
+        type: DataTypes.ARRAY(DataTypes.UUID),
+        allowNull: true,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      is_selfmanaged: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      selfmanaged_password: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      selfmanaged_invitation_link: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
     {
       hooks: {
