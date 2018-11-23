@@ -20,9 +20,34 @@ describe('group chat with admins creation', () => {
 
     service.create({
       type: 'group',
+      description: 'test-group-with-admins',
       name: 'test-group-with-admins',
       participants: myAdmins,
       admins: myAdmins,
+    });
+
+    assert.ok(service);
+    assert.ok(true, 'Error occured in the group chat with admins creation');
+  });
+});
+
+describe('selfmanaged group chat with admins creation', () => {
+  it('should succeed with valid selfmanaged group chat with admins creation', () => {
+    const service = app.service('chats');
+
+    const myAdmins = [];
+    myAdmins.push(faker.fake('{{random.uuid}}'));
+    myAdmins.push(faker.fake('{{random.uuid}}'));
+
+    service.create({
+      type: 'group',
+      description: 'test-group-with-admins-and-selfmanaged',
+      name: 'test-group-with-admins',
+      participants: myAdmins,
+      admins: myAdmins,
+      is_selfmanaged: true,
+      selfmanaged_password: 'moodle-beitrittspasswort',
+      selfmanaged_invitation_link: 'https://hschat.app/groups/join/test-group-with-admins',
     });
 
     assert.ok(service);
