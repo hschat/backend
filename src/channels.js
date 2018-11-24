@@ -106,11 +106,15 @@ module.exports = (app) => {
         const participantIds = result.participants.map(
           participant => participant.id,
         );
-        const { connections } = app
-          .channel(app.channels)
-          .filter(connection => participantIds.includes(connection.user.id));
 
-        app.channel(`chats/${result.id}`).join(...connections);
+        if (app.channels && app.channels.length > 0) {
+          const { connections } = app
+            .channel(app.channels)
+            .filter(connection => participantIds.includes(connection.user.id));
+
+          app.channel(`chats/${result.id}`).join(...connections);
+        }
+
         return context;
       },
     },
