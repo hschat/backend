@@ -92,6 +92,11 @@ module.exports = (app) => {
       },
       is_activated: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      deactivated_since: {
+        type: DataTypes.DATE,
         allowNull: true,
       },
     },
