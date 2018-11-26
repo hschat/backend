@@ -86,6 +86,19 @@ module.exports = (app) => {
         allowNull: false,
         defaultValue: false,
       },
+      location_is_allowed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      is_activated: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      deactivated_since: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       hooks: {
