@@ -22,6 +22,5 @@ deploy:
     master: hsc-backend
     staging: hsc-backend-staging
   run: "node_modules/.bin/sequelize db:migrate"
-
 after_script:
 - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
