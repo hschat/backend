@@ -22,9 +22,10 @@
     "test": "yarn run eslint && yarn run mocha",
     "eslint": "eslint .",
     "eslint:watch": "esw -w",
-    "start": "node src/",
-    "mocha": "NODE_ENV=test nyc --reporter=lcov mocha test/ --exit",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "start": "yarn run migrate; node src/",
+    "mocha": "nyc --reporter=lcov mocha test/ --exit; nyc report",
+    "coverage": "nyc report",
+    "migrate": "node_modules/.bin/sequelize db:migrate"
   },
   "dependencies": {
     "@babel/cli": "^7.1.2",
