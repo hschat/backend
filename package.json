@@ -23,8 +23,8 @@
     "eslint": "eslint .",
     "eslint:watch": "esw -w",
     "start": "node src/",
-    "mocha": "NODE_ENV=test nyc --reporter=lcov mocha test/ --exit",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "mocha": "nyc --reporter=lcov mocha test/ --exit; nyc report",
+    "coverage": "nyc report"
   },
   "dependencies": {
     "@babel/cli": "^7.1.2",
