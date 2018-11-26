@@ -1,4 +1,4 @@
-#Code of Conduct
+# Code of Conduct
 This document provides community guidelines for a safe, respectful, productive, and collaborative place for any person who is willing to contribute to the HSChat App. It applies to all “collaborative space”, which is defined as community communications channels (such as Discord, submitted patches, commit comments, etc.).
 
 - Participants will be tolerant of opposing views.
