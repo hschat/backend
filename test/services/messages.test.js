@@ -19,12 +19,29 @@ describe('messages service create and find', () => {
       password: faker.internet.password(),
     });
 
+    const helpUserTwo = await app.service('users').create({
+      prename: 'TestTest2',
+      lastname: faker.name.lastName(),
+      email: faker.internet.email(),
+      hsid: 'test1234',
+      password: faker.internet.password(),
+    });
+
+    const participantList = [];
+    participantList.push(helpUser.id);
+    participantList.push(helpUserTwo.id);
+
+    const personalChat = await app.service('chats').create({
+      type: 'personal',
+      participants: participantList,
+    });
+
     const service = app.service('messages');
 
     const message = await service.create({
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      chat_id: faker.random.uuid(),
+      chat_id: personalChat.id,
       sender_id: helpUser.id,
       send_date: Date.now(),
       recieve_date: Date.now(),
