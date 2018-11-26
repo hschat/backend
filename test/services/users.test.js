@@ -10,47 +10,32 @@ describe('\'users\' service', () => {
   });
 
   describe('user creation', () => {
-    it('should succeed with valid user data', () => {
+    it('should succeed with valid user data', async () => {
       const service = app.service('users');
 
-      service.create({
+      const user = await service.create({
         prename: faker.name.firstName(),
         lastname: faker.name.lastName(),
         email: faker.internet.email(),
         hsid: 'test1234',
         password: faker.internet.password(),
       });
-      assert.ok(service);
-      assert.ok(true, 'Error accured in the user creation');
-    });
-
-
-    it('should fail with invalid user data', () => {
-      const service = app.service('users');
-
-      service.create({
-        prename: 1234,
-        lastname: faker.name.lastName(),
-        email: 'abcdefg.com',
-        hsid: '123412345',
-        password: faker.internet.password(),
-      });
-      assert.ok(service);
-      assert.ok(true, 'Error because it should fail');
+      assert.ok(user !== undefined, 'Error user was not created');
+      assert.ok(user.hsid === 'test1234');
     });
   });
 
   describe('user finding', () => {
-    it('should succeed with valid user data', () => {
+    it('should succeed with valid user data', async () => {
       const service = app.service('users');
 
-      service.find({
+      const users = await service.find({
         idField: 'id',
         ownerField: 'id',
       });
 
       assert.ok(service);
-      assert.ok(true, 'Error accured at finding user with id');
+      assert.ok(users !== undefined, 'Error at finding users from database');
     });
     it('should find something with valid data', async () => {
       const service = await app.service('users')
