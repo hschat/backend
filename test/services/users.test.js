@@ -14,7 +14,7 @@ describe('\'users\' service', () => {
       const service = app.service('users');
 
       const user = await service.create({
-        prename: faker.name.firstName(),
+        prename: 'TestTest',
         lastname: faker.name.lastName(),
         email: faker.internet.email(),
         hsid: 'test1234',
@@ -42,11 +42,11 @@ describe('\'users\' service', () => {
         .find({
           query: {
             $limit: 1,
-            prename: '1234',
+            prename: 'TestTest',
           },
         });
       assert.ok(service.data.length === 1, 'Error accured at finding users with prename');
-      assert.ok(service.data[0].hsid === '123412345', 'Error within found users data');
+      assert.ok(service.data[0].hsid === 'test1234', 'Error within found users data');
     });
   });
 
