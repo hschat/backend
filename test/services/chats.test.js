@@ -77,6 +77,7 @@ describe('creating a personal chat between two users', () => {
 
     const personalChat = await app.service('chats').create({
       type: 'personal',
+      name: 'test',
       participants: participantList,
     });
 
