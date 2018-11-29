@@ -25,10 +25,12 @@ module.exports = (app) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       hsid: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       prename: {
         type: DataTypes.STRING,
