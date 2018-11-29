@@ -99,6 +99,11 @@ module.exports = (app) => {
         type: DataTypes.DATE,
         allowNull: true,
       },
+      temporary_password: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+        defaultValue: null,
+      },
     },
     {
       hooks: {
