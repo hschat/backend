@@ -1,12 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
+  up: (queryInterface, Sequelize) => Promise.all([
     queryInterface.addColumn(
       'users',
       'is_activated', {
@@ -14,26 +7,17 @@ module.exports = {
         allowNull: false,
         defaultValue: true,
       },
-    );
-
+    ),
     queryInterface.addColumn(
       'users',
       'deactivated_since', {
         type: Sequelize.DATE,
         allowNull: true,
       },
-    );
-  },
-
-  down: (queryInterface) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.dropTable('users');
-    */
-    queryInterface.removeColumn('users', 'is_activated');
-    queryInterface.removeColumn('users', 'deactivated_since');
-  },
+    ),
+  ]),
+  down: queryInterface => Promise.all([
+    queryInterface.removeColumn('users', 'is_activated'),
+    queryInterface.removeColumn('users', 'deactivated_since'),
+  ]),
 };

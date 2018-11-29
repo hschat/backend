@@ -1,12 +1,5 @@
 module.exports = {
-  up: (queryInterface, DataTypes) => {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
+  up: (queryInterface, DataTypes) => Promise.all([
     queryInterface.addColumn(
       'users',
       'last_time_online',
@@ -14,8 +7,7 @@ module.exports = {
         type: DataTypes.DATE,
         allowNull: true,
       },
-    );
-
+    ),
     queryInterface.addColumn(
       'users',
       'isOnline',
@@ -24,18 +16,11 @@ module.exports = {
         allowNull: false,
         defaultValue: false,
       },
-    );
-  },
+    ),
+  ]),
 
-  down: (queryInterface) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.dropTable('users');
-    */
-    queryInterface.removeColumn('users', 'last_time_online');
-    queryInterface.removeColumn('users', 'isOnline');
-  },
+  down: queryInterface => Promise.all([
+    queryInterface.removeColumn('users', 'last_time_online'),
+    queryInterface.removeColumn('users', 'isOnline'),
+  ]),
 };
