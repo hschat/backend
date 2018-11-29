@@ -22,14 +22,4 @@ describe('\'messages\' hooks should fail', async () => {
     };
     service.create(properties).should.be.rejectedWith(TypeError);
   });
-  it('because of missing send_date', async () => {
-    const service = app.service('messages');
-    const properties = {
-      system: true,
-      sender_id: 123,
-      chat_id: 123,
-      text: '123',
-    };
-    service.create(properties).should.be.rejectedWith(TypeError);
-  });
 });

@@ -56,7 +56,7 @@
     "eslint": "eslint .",
     "eslint:watch": "esw -w",
     "start": "yarn run migrate; node src/",
-    "mocha": "nyc --reporter=lcov mocha test/ --exit; nyc report",
+    "mocha": "nyc --reporter=lcov mocha test/ --exit && nyc report",
     "coverage": "nyc report",
     "migrate": "node_modules/.bin/sequelize db:migrate"
   },
