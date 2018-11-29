@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface, Sequelize) => { // eslint-disable-line
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
@@ -7,7 +7,7 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-    queryInterface.addColumn(
+    return queryInterface.addColumn(
       'users',
       'location_is_allowed', {
         type: Sequelize.BOOLEAN,
@@ -16,7 +16,7 @@ module.exports = {
     );
   },
 
-  down: (queryInterface) => {
+  down: (queryInterface) => { // eslint-disable-line
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
@@ -24,6 +24,6 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-    queryInterface.removeColumn('users', 'location_is_allowed');
+    return queryInterface.removeColumn('users', 'location_is_allowed');
   },
 };

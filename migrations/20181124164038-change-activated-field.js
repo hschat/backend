@@ -1,9 +1,9 @@
 module.exports = {
-  up: (queryInterface) => {
-    queryInterface.removeColumn('users', 'is_activated');
+  up: (queryInterface) => { // eslint-disable-line
+    return queryInterface.removeColumn('users', 'is_activated');
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface, Sequelize) => { // eslint-disable-line
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
@@ -11,7 +11,7 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-    queryInterface.addColumn(
+    return queryInterface.addColumn(
       'users',
       'is_activated', {
         type: Sequelize.BOOLEAN,
