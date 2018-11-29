@@ -7,7 +7,7 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-    return [
+    return Promise.all([
       queryInterface.addColumn(
         'users',
         'last_time_online',
@@ -25,7 +25,7 @@ module.exports = {
           defaultValue: false,
         },
       ),
-    ];
+    ]);
   },
 
   down: (queryInterface) => { // eslint-disable-line
@@ -36,9 +36,9 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-    return [
+    return Promise.all([
       queryInterface.removeColumn('users', 'last_time_online'),
       queryInterface.removeColumn('users', 'isOnline'),
-    ];
+    ]);
   },
 };

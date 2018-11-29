@@ -6,7 +6,7 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-    return [
+    return Promise.all([
       queryInterface.addColumn(
         'chats',
         'admins',
@@ -48,7 +48,7 @@ module.exports = {
           allowNull: true,
         },
       ),
-    ];
+    ]);
   },
   down: (queryInterface) => { // eslint-disable-line
     /*
@@ -57,12 +57,12 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-    return [
+    return Promise.all([
       queryInterface.removeColumn('chats', 'admins'),
       queryInterface.removeColumn('chats', 'description'),
       queryInterface.removeColumn('chats', 'is_selfmanaged'),
       queryInterface.removeColumn('chats', 'selfmanaged_password'),
       queryInterface.removeColumn('chats', 'selfmanaged_invitation_link'),
-    ];
+    ]);
   },
 };
