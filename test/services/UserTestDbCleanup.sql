@@ -1,0 +1,1 @@
+DELETE FROM users WHERE hsid='test1234' OR hsid='123412345';
