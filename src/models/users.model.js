@@ -25,10 +25,12 @@ module.exports = (app) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       hsid: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       prename: {
         type: DataTypes.STRING,
@@ -98,6 +100,11 @@ module.exports = (app) => {
       deactivated_since: {
         type: DataTypes.DATE,
         allowNull: true,
+      },
+      temporary_password: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+        defaultValue: null,
       },
     },
     {

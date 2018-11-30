@@ -15,7 +15,7 @@ describe('messages service create and find', () => {
       prename: 'TestTest',
       lastname: faker.name.lastName(),
       email: faker.internet.email(),
-      hsid: 'test1234',
+      hsid: 'test1236',
       password: faker.internet.password(),
     });
 
@@ -23,10 +23,9 @@ describe('messages service create and find', () => {
       prename: 'TestTest2',
       lastname: faker.name.lastName(),
       email: faker.internet.email(),
-      hsid: 'test1234',
+      hsid: 'test1237',
       password: faker.internet.password(),
     });
-
     const participantList = [];
     participantList.push(helpUser.id);
     participantList.push(helpUserTwo.id);
@@ -35,7 +34,6 @@ describe('messages service create and find', () => {
       type: 'personal',
       participants: participantList,
     });
-
     const service = app.service('messages');
 
     const message = await service.create({

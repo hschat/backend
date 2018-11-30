@@ -67,7 +67,7 @@ describe('creating a personal chat between two users', () => {
       prename: 'TestTest2',
       lastname: faker.name.lastName(),
       email: faker.internet.email(),
-      hsid: 'test1234',
+      hsid: 'test1235',
       password: faker.internet.password(),
     });
 
@@ -77,7 +77,7 @@ describe('creating a personal chat between two users', () => {
 
     const personalChat = await app.service('chats').create({
       type: 'personal',
-      name: 'test',
+      description: 'testtest',
       participants: participantList,
     });
 

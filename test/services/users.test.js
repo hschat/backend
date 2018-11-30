@@ -14,14 +14,14 @@ describe('\'users\' service', () => {
       const service = app.service('users');
 
       const user = await service.create({
-        prename: 'TestTest',
+        prename: 'TestTestSearch',
         lastname: faker.name.lastName(),
         email: faker.internet.email(),
-        hsid: 'test1234',
+        hsid: 'test1231',
         password: faker.internet.password(),
       });
       assert.ok(user !== undefined, 'Error user was not created');
-      assert.ok(user.hsid === 'test1234');
+      assert.ok(user.hsid === 'test1231');
     });
   });
 
@@ -42,11 +42,11 @@ describe('\'users\' service', () => {
         .find({
           query: {
             $limit: 1,
-            prename: 'TestTest',
+            prename: 'TestTestSearch',
           },
         });
       assert.ok(service.data.length === 1, 'Error accured at finding users with prename');
-      assert.ok(service.data[0].hsid === 'test1234', 'Error within found users data');
+      assert.ok(service.data[0].hsid === 'test1231', 'Error within found users data');
     });
   });
 
@@ -57,12 +57,12 @@ describe('\'users\' service', () => {
           prename: faker.name.firstName(),
           lastname: faker.name.lastName(),
           email: faker.internet.email(),
-          hsid: 'test1234',
+          hsid: 'test1232',
           password: 'secret',
         });
 
       assert.ok(user.password !== 'secret', 'Error password hashing');
-      assert.ok(user.hsid === 'test1234');
+      assert.ok(user.hsid === 'test1232');
       assert.ok(user.isVerified === false, 'failed verification flag');
     });
   });
@@ -74,7 +74,7 @@ describe('\'users\' service', () => {
           prename: faker.name.firstName(),
           lastname: faker.name.lastName(),
           email: faker.internet.email(),
-          hsid: 'test1234',
+          hsid: 'test1233',
           password: 'secret',
         });
 
