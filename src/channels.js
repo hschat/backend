@@ -89,6 +89,10 @@ module.exports = (app) => {
     .service('chats')
     .publish('created', data => app.channel(`chats/${data.id}`));
 
+  app
+    .service('chats')
+    .publish('patched', data => app.channel(`chats/${data.id}`));
+
   // Resgister created event for messages
   app
     .service('messages')

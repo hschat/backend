@@ -1,14 +1,47 @@
 {
   "name": "backend",
-  "description": "",
-  "version": "0.0.0",
+  "description": "Backend for the PoC HSChat App",
+  "version": "0.1.0",
   "homepage": "https://hschat.app/",
   "main": "src",
   "author": {
     "name": "David Schwarzmann",
     "email": "dev@dschwarz.codes"
   },
-  "contributors": [],
+  "contributors": [
+    {
+      "name": "Christian Ziegler",
+      "email": "christian@cziegler.de"
+    },
+    {
+      "name": "Ingo Scheler",
+      "email": "ingo.scheler@online.de"
+    },
+    {
+      "name": "Lukas Höllein",
+      "email": "lukashoellein@gmail.com"
+    },
+    {
+      "name": "Oliver Korn",
+      "email": "oliverkorn93@gmx.de"
+    },
+    {
+      "name": "Alexander Wollheim",
+      "email": "Alexander.Wollheim@stud.hs-coburg.de"
+    },
+    {
+      "name": "Louisa Schirmer",
+      "email": "Louisa.Schirmer@stud.hs-coburg.de"
+    },
+    {
+      "name": "Christian Minuth",
+      "email": "Christian.Minuth@stud.hs-coburg.de"
+    },
+    {
+      "name": "Timo Purzner",
+      "email": "Timo@purzner.de"
+    }
+  ],
   "bugs": {},
   "directories": {
     "lib": "src",
@@ -22,9 +55,10 @@
     "test": "yarn run eslint && yarn run mocha",
     "eslint": "eslint .",
     "eslint:watch": "esw -w",
-    "start": "node src/",
-    "mocha": "NODE_ENV=test nyc --reporter=lcov mocha test/ --exit",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "start": "yarn run migrate; node src/",
+    "mocha": "nyc --reporter=lcov mocha test/ --exit && nyc report",
+    "coverage": "nyc report",
+    "migrate": "node_modules/.bin/sequelize db:migrate"
   },
   "dependencies": {
     "@babel/cli": "^7.1.2",
@@ -50,14 +84,14 @@
     "feathers-sequelize": "^3.1.2",
     "global": "^4.3.2",
     "helmet": "^3.14.0",
-    "node": "^10.12.0",
+    "node": "^11.2.0",
     "pg": "^7.5.0",
     "raven": "^2.6.4",
     "sequelize": "^4.40.0",
+    "sequelize-cli": "^5.1.0",
     "serve-favicon": "^2.5.0",
     "snyk": "^1.105.0",
-    "winston": "^3.1.0",
-    "sequelize-cli": "^5.1.0"
+    "winston": "^3.1.0"
   },
   "devDependencies": {
     "babel-preset-flow": "^6.23.0",

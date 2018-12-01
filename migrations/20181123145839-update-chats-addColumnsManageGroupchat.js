@@ -1,11 +1,5 @@
 module.exports = {
-  up: (queryInterface, DataTypes) => {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-      Example:
-      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
+  up: (queryInterface, DataTypes) => Promise.all([
     queryInterface.addColumn(
       'chats',
       'admins',
@@ -13,7 +7,7 @@ module.exports = {
         type: DataTypes.ARRAY(DataTypes.UUID),
         allowNull: true,
       },
-    );
+    ),
     queryInterface.addColumn(
       'chats',
       'description',
@@ -21,7 +15,7 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-    );
+    ),
     queryInterface.addColumn(
       'chats',
       'is_selfmanaged',
@@ -30,7 +24,7 @@ module.exports = {
         allowNull: false,
         defaultValue: false,
       },
-    );
+    ),
     queryInterface.addColumn(
       'chats',
       'selfmanaged_password',
@@ -38,7 +32,7 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-    );
+    ),
     queryInterface.addColumn(
       'chats',
       'selfmanaged_invitation_link',
@@ -46,19 +40,13 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-    );
-  },
-  down: (queryInterface) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-      Example:
-      return queryInterface.dropTable('users');
-    */
-    queryInterface.removeColumn('chats', 'admins');
-    queryInterface.removeColumn('chats', 'description');
-    queryInterface.removeColumn('chats', 'is_selfmanaged');
-    queryInterface.removeColumn('chats', 'selfmanaged_password');
-    queryInterface.removeColumn('chats', 'selfmanaged_invitation_link');
-  },
+    ),
+  ]),
+  down: queryInterface => Promise.all([
+    queryInterface.removeColumn('chats', 'admins'),
+    queryInterface.removeColumn('chats', 'description'),
+    queryInterface.removeColumn('chats', 'is_selfmanaged'),
+    queryInterface.removeColumn('chats', 'selfmanaged_password'),
+    queryInterface.removeColumn('chats', 'selfmanaged_invitation_link'),
+  ]),
 };
