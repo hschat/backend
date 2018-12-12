@@ -3,7 +3,6 @@ const feathers = require('@feathersjs/feathers');
 const commonHooks = require('feathers-hooks-common');
 const { hashPassword } = require('@feathersjs/authentication-local').hooks;
 const { restrictToOwner } = require('feathers-authentication-hooks');
-//const { restrictDeactivated } = require('@feathersjs/errors');
 const logger = require('winston');
 
 const restrict = [
@@ -16,27 +15,6 @@ const restrict = [
     if (context.params.user.role === 'admin') {
       console.log('success Admin');
       return feathers.SKIP;
-    }
-    return undefined;
-  },
-  restrictToOwner({
-    idField: 'id',
-    ownerField: 'id',
-  }),
-];
-
-const restrictDeactivated = [
-  authenticate('jwt'),
-  (context) => {
-    //if(!context.params.user){
-      //return undefined;
-    //}
-    if (context.params.user.is_activated === true){
-      console.log('Success');
-      return feathers.SKIP;
-    }else{
-      throw new Error('User deaktiviert');
-      return undefined;
     }
     return undefined;
   },
@@ -80,13 +58,13 @@ module.exports = {
     all: [],
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [...restrictDeactivated, hashPassword(), setUserFields],
-    update: [...restrict,...restrictDeactivated, hashPassword()],
+    create: [hashPassword(), setUserFields],
+    update: [...restrict, hashPassword()],
     patch: [
-      ...restrict, ...restrictDeactivated,
+      ...restrict,
       hashPassword(),
     ],
-    remove: [...restrict, ...restrictDeactivated],
+    remove: [...restrict],
   },
 
   after: {
