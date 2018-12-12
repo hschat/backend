@@ -25,7 +25,6 @@ module.exports = (app) => {
   };
   */
   const restrictDeactivated = [
-    authentication.hooks.authenticate('jwt'),
     (context) => {
       if (context.params.user.is_activated === true){
         console.log('Success');
