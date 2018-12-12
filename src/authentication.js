@@ -24,24 +24,22 @@ module.exports = (app) => {
     return hook;
   };
   */
-  const restrictDeactivated = [
-    (context) => {
+  const restrictDeactivated = context =>{
       if (context.params.user.is_activated === true){
         console.log('Success');
         return context;
       }else{
-        throw new Error('User deaktiviert');
+        throw new Forbidden('User deaktiviert');
         return undefined;
       }
       return undefined;
-    },
-  ];
+  };
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
   // to create a new valid JWT (e.g. local or oauth2)
   app.service('authentication').hooks({
     before: {
-      create: [restrictDeactivated, authentication.hooks.authenticate(config.strategies)],
+      create: [authentication.hooks.authenticate(config.strategies), restrictDeactivated],
       remove: [authentication.hooks.authenticate('jwt')],
     },
   });
