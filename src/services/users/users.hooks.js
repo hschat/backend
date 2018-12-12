@@ -10,9 +10,11 @@ const restrict = [
   authenticate('jwt'),
   (context) => { // Restricts to Admins only
     if (!context.params.user) {
+      console.log('not admin');
       return undefined; // If User is not Admin, allow self update
     }
     if (context.params.user.role === 'admin') {
+      console.log('success Admin');
       return feathers.SKIP;
     }
     return undefined;
@@ -24,12 +26,17 @@ const restrict = [
 ];
 
 const restrictDeactivated = [
+  authenticate('jwt'),
   (context) => {
-    if(!context.params.user){
-      return undefined;
-    }
+    //if(!context.params.user){
+      //return undefined;
+    //}
     if (context.params.user.is_activated === true){
+      console.log('Success');
       return feathers.SKIP;
+    }else{
+      throw new Error('User deaktiviert');
+      return undefined;
     }
     return undefined;
   },
@@ -74,12 +81,12 @@ module.exports = {
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
     create: [...restrictDeactivated, hashPassword(), setUserFields],
-    update: [...restrict, hashPassword()],
+    update: [...restrict,...restrictDeactivated, hashPassword()],
     patch: [
-      ...restrict,
+      ...restrict, ...restrictDeactivated,
       hashPassword(),
     ],
-    remove: [...restrict],
+    remove: [...restrict, ...restrictDeactivated],
   },
 
   after: {
