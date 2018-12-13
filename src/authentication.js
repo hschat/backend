@@ -29,7 +29,7 @@ module.exports = (app) => {
     if (context.params.user.is_activated === true) {
       return context;
     }
-      throw new Forbidden('User deaktiviert');
+    throw new Forbidden('User deaktiviert');
   };
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
