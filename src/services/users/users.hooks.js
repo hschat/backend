@@ -9,11 +9,9 @@ const restrict = [
   authenticate('jwt'),
   (context) => { // Restricts to Admins only
     if (!context.params.user) {
-      console.log('not admin');
       return undefined; // If User is not Admin, allow self update
     }
     if (context.params.user.role === 'admin') {
-      console.log('success Admin');
       return feathers.SKIP;
     }
     return undefined;

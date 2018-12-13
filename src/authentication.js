@@ -24,15 +24,12 @@ module.exports = (app) => {
     return hook;
   };
   */
-  const restrictDeactivated = context =>{
-      if (context.params.user.is_activated === true){
-        console.log('Success');
-        return context;
-      }else{
-        throw new Forbidden('User deaktiviert');
-        return undefined;
-      }
-      return undefined;
+  const restrictDeactivated = context => {
+    if (context.params.user.is_activated === true) {
+    return context;
+  } else {
+    throw new Forbidden('User deaktiviert');
+  }
   };
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
