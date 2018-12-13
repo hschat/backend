@@ -1,6 +1,7 @@
 const authentication = require('@feathersjs/authentication');
 const jwt = require('@feathersjs/authentication-jwt');
 const local = require('@feathersjs/authentication-local');
+const { Forbidden } = require('@feathersjs/errors');
 
 module.exports = (app) => {
   const config = app.get('authentication');
@@ -27,9 +28,8 @@ module.exports = (app) => {
   const restrictDeactivated = (context) => {
     if (context.params.user.is_activated === true) {
       return context;
-    } else {
-      throw new Forbidden('User deaktiviert');
     }
+      throw new Forbidden('User deaktiviert');
   };
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
