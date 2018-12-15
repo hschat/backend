@@ -253,6 +253,10 @@ module.exports = {
         }
 
         // eslint-disable-next-line no-param-reassign
+        hook.params.query.$or = [
+          { participants: { $contains: [id] } },
+          { is_selfmanaged: true },
+        ];
         /*
         hook.params.query.participants = {
           $contains: [id],
