@@ -253,9 +253,11 @@ module.exports = {
         }
 
         // eslint-disable-next-line no-param-reassign
+        /*
         hook.params.query.participants = {
           $contains: [id],
         };
+        */
 
         return hook;
       },
