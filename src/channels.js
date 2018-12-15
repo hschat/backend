@@ -18,7 +18,7 @@ module.exports = (app) => {
     // He is allowed to find all chats, he is contained in
     // AND all selfmanaged_group_chats (for searching)
     const chats = await app
-      .service('chats')
+      .service('chats') 
       .find({
         query: {
           $or: [
@@ -28,6 +28,7 @@ module.exports = (app) => {
         },
       });
     chats.data.forEach((chat) => {
+      console.log(`chats/${chat.name}`);
       app.channel(`chats/${chat.id}`).join(connection);
     });
   };
