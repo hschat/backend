@@ -14,7 +14,7 @@ module.exports = (app) => {
       app.channel('admins').join(connection);
     }
 
-    // find all chats for the user:
+    // find all chats for the user
     const chats = await app
       .service('chats')
       .find({ query: { participants: { $contains: [user.id] } } });
