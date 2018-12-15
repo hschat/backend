@@ -252,16 +252,12 @@ module.exports = {
           );
         }
 
-        // eslint-disable-next-line no-param-reassign
-        hook.params.query.$or = [
-          { participants: { $contains: [id] } },
-          { is_selfmanaged: true },
-        ];
-        /*
-        hook.params.query.participants = {
-          $contains: [id],
-        };
-        */
+        if (!hook.params.query.is_selfmanaged) {
+          // eslint-disable-next-line no-param-reassign
+          hook.params.query.participants = {
+            $contains: [id],
+          };
+        }
 
         return hook;
       },
