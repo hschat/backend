@@ -1,6 +1,7 @@
 const authentication = require('@feathersjs/authentication');
 const jwt = require('@feathersjs/authentication-jwt');
 const local = require('@feathersjs/authentication-local');
+const { Forbidden } = require('@feathersjs/errors');
 
 module.exports = (app) => {
   const config = app.get('authentication');
@@ -24,13 +25,18 @@ module.exports = (app) => {
     return hook;
   };
   */
-
+  const restrictDeactivated = (context) => {
+    if (context.params.user.is_activated === true) {
+      return context;
+    }
+    throw new Forbidden('USER_NOT_ACTIVE');
+  };
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
   // to create a new valid JWT (e.g. local or oauth2)
   app.service('authentication').hooks({
     before: {
-      create: [authentication.hooks.authenticate(config.strategies)],
+      create: [authentication.hooks.authenticate(config.strategies), restrictDeactivated],
       remove: [authentication.hooks.authenticate('jwt')],
     },
   });

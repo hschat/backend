@@ -252,10 +252,13 @@ module.exports = {
           );
         }
 
-        // eslint-disable-next-line no-param-reassign
-        hook.params.query.participants = {
-          $contains: [id],
-        };
+        // Group chats that are selfmanaged can be found by users that are not in that group
+        if (!hook.params.query.is_selfmanaged) {
+          // eslint-disable-next-line no-param-reassign
+          hook.params.query.participants = {
+            $contains: [id],
+          };
+        }
 
         return hook;
       },
