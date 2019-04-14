@@ -50,9 +50,6 @@ app.use(cors());
 app.use(compress());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(favicon(path.join(app.get('public'), 'img', 'favicon', 'favicon.ico')));
-
-app.use('/', express.static(app.get('public')));
 
 app.configure(sequelize);
 app.configure(express.rest());
