@@ -7,8 +7,6 @@ if ({}.hasOwnProperty.call(process.env, 'SENTRY_DSN')) {
   logger.info('Sentry enabled');
 }
 
-const path = require('path');
-const favicon = require('serve-favicon');
 const compress = require('compression');
 const cors = require('cors');
 const helmet = require('helmet');
