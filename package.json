@@ -58,7 +58,9 @@
     "start": "yarn run migrate; node src/",
     "mocha": "nyc --reporter=lcov mocha test/ --exit && nyc report",
     "coverage": "nyc report",
-    "migrate": "node_modules/.bin/sequelize db:migrate"
+    "migrate": "node_modules/.bin/sequelize db:migrate",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "@babel/cli": "^7.1.2",
@@ -89,7 +91,7 @@
     "raven": "^2.6.4",
     "sequelize": "^4.40.0",
     "sequelize-cli": "^5.1.0",
-    "snyk": "^1.105.0",
+    "snyk": "^1.163.3",
     "winston": "^3.1.0"
   },
   "devDependencies": {
@@ -105,5 +107,6 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "should": "^13.2.3"
-  }
+  },
+  "snyk": true
 }
