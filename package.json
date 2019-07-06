@@ -77,7 +77,7 @@
     "@feathersjs/socketio": "^3.2.6",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
-    "expo-cli": "^2.2.4",
+    "expo-cli": "^2.13.0",
     "feathers-authentication-hooks": "^0.3.1",
     "feathers-authentication-management": "^2.0.1",
     "feathers-hooks-common": "git://github.com/feathers-plus/feathers-hooks-common.git#master",
