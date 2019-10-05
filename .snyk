@@ -2836,3 +2836,12 @@ patch:
   SNYK-JS-AXIOS-174505:
     - expo-cli > axios:
         patched: '2019-07-04T19:38:52.446Z'
+  SNYK-JS-HTTPSPROXYAGENT-469131:
+    - snyk > proxy-agent > https-proxy-agent:
+        patched: '2019-10-05T06:47:54.056Z'
+    - snyk > proxy-agent > pac-proxy-agent > https-proxy-agent:
+        patched: '2019-10-05T06:47:54.056Z'
+    - expo-cli > xdl > pacote > make-fetch-happen > https-proxy-agent:
+        patched: '2019-10-05T06:47:54.056Z'
+    - expo-cli > xdl > pacote > npm-registry-fetch > make-fetch-happen > https-proxy-agent:
+        patched: '2019-10-05T06:47:54.056Z'
