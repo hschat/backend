@@ -2833,6 +2833,14 @@ patch:
         patched: '2019-07-04T19:38:52.446Z'
     - '@feathersjs/cli > generator-feathers > @feathersjs/jscodeshift > babel-preset-es2015 > babel-plugin-transform-es2015-parameters > babel-helper-call-delegate > babel-types > lodash':
         patched: '2019-07-04T19:38:52.446Z'
+    - snyk > snyk-nuget-plugin > dotnet-deps-parser > lodash:
+        patched: '2019-10-09T07:21:27.789Z'
+    - snyk > snyk-go-plugin > graphlib > lodash:
+        patched: '2019-10-09T07:21:27.789Z'
+    - snyk > @snyk/dep-graph > graphlib > lodash:
+        patched: '2019-10-09T07:21:27.789Z'
+    - snyk > snyk-nodejs-lockfile-parser > graphlib > lodash:
+        patched: '2019-10-09T07:21:27.789Z'
   SNYK-JS-AXIOS-174505:
     - expo-cli > axios:
         patched: '2019-07-04T19:38:52.446Z'
@@ -2845,3 +2853,7 @@ patch:
         patched: '2019-10-05T06:47:54.056Z'
     - expo-cli > xdl > pacote > npm-registry-fetch > make-fetch-happen > https-proxy-agent:
         patched: '2019-10-05T06:47:54.056Z'
+    - snyk > proxy-agent > https-proxy-agent:
+        patched: '2019-10-09T07:21:27.789Z'
+    - snyk > proxy-agent > pac-proxy-agent > https-proxy-agent:
+        patched: '2019-10-09T07:21:27.789Z'
